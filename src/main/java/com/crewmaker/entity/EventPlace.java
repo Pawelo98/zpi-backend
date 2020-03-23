@@ -41,6 +41,9 @@ public class EventPlace {
     @Column(name="eventPlaceStreetNumber")
     private String streetNumber;
 
+    @Column(name="photoLink")
+    private String photoLink;
+
     @OneToMany(mappedBy="eventPlace", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<EventPlaceOpinion> eventPlaceEventPlaceOpinions;
@@ -53,7 +56,8 @@ public class EventPlace {
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<Event> eventPlaceEvents;
 
-    public EventPlace(User userAccepting, User userRequesting, String name, String description, String city, String postCode, String street, String streetNumber) {
+    public EventPlace(User userAccepting, User userRequesting, String name, String description, String city,
+                      String postCode, String street, String streetNumber, String photoLink) {
         this.userAccepting = userAccepting;
         this.userRequesting = userRequesting;
         this.name = name;
@@ -62,6 +66,7 @@ public class EventPlace {
         this.postCode = postCode;
         this.street = street;
         this.streetNumber = streetNumber;
+        this.photoLink = photoLink;
     }
 
     public EventPlace() {}
@@ -136,6 +141,14 @@ public class EventPlace {
 
     public void setStreetNumber(String streetNumber) {
         this.streetNumber = streetNumber;
+    }
+
+    public String getPhotoLink() {
+        return photoLink;
+    }
+
+    public void setPhotoLink(String photoLink) {
+        this.photoLink = photoLink;
     }
 
     public Set<EventPlaceOpinion> getEventPlaceEventPlaceOpinions() {

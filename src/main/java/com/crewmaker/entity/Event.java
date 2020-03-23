@@ -63,11 +63,9 @@ public class Event {
     @Column(name="eventDuration")
     private Time eventDuration;
 
-    @Column(name="photoLink")
-    private String photoLink;
-
     public Event(CyclePeriod cyclePeriod, EventStatus eventStatus, EventPlace eventPlace, SportsCategory sportsCategory,
-                 String name, String description, Date date, int maxPlayers, boolean isCyclic, Time eventTime, Time eventDuration, String photoLink) {
+                 String name, String description, Date date, int maxPlayers, boolean isCyclic, Time eventTime,
+                 Time eventDuration) {
         this.cyclePeriod = cyclePeriod;
         this.eventStatus = eventStatus;
         this.eventPlace = eventPlace;
@@ -79,7 +77,6 @@ public class Event {
         this.isCyclic = isCyclic;
         this.eventTime = eventTime;
         this.eventDuration = eventDuration;
-        this.photoLink = photoLink;
     }
 
     public Event() {}
@@ -178,14 +175,6 @@ public class Event {
 
     public void setEventDuration(Time eventDuration) {
         this.eventDuration = eventDuration;
-    }
-
-    public String getPhotoLink() {
-        return photoLink;
-    }
-
-    public void setPhotoLink(String photoLink) {
-        this.photoLink = photoLink;
     }
 
     public Set<Participation> getEventParticipations() {

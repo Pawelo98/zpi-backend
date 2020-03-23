@@ -9,14 +9,14 @@ public class Participation {
     @EmbeddedId
     ParticipationId id;
 
-    @Column(name="queueNumber")
-    private int queueNumber;
+    @Column(name="queuePosition")
+    private int queuePosition;
 
     public Participation() {}
 
-    public Participation(User user, Event event, int queueNumber) {
+    public Participation(User user, Event event, int queuePosition) {
         this.id = new ParticipationId(user, event);
-        this.queueNumber = queueNumber;
+        this.queuePosition = queuePosition;
     }
 
     public ParticipationId getId() {
@@ -28,11 +28,11 @@ public class Participation {
     }
 
     public int getQueueNumber() {
-        return queueNumber;
+        return queuePosition;
     }
 
     public void setQueueNumber(int queueNumber) {
-        this.queueNumber = queueNumber;
+        this.queuePosition = queueNumber;
     }
 }
 

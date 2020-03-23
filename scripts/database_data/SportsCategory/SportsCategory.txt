@@ -1,0 +1,15 @@
+INSERT INTO SportsCategory (SportCategoryName, DefaultPlayersNumber) VALUES ('Piłka nożna', 11);
+INSERT INTO SportsCategory (SportCategoryName, DefaultPlayersNumber) VALUES ('Siatkówka' , 12);
+INSERT INTO SportsCategory (SportCategoryName, DefaultPlayersNumber) VALUES ('Koszykówka', 10);
+INSERT INTO SportsCategory (SportCategoryName, DefaultPlayersNumber) VALUES ('Piłka halowa', 12);
+INSERT INTO SportsCategory (SportCategoryName, DefaultPlayersNumber) VALUES ('Piłka ręczna',  14);
+INSERT INTO SportsCategory (SportCategoryName, DefaultPlayersNumber) VALUES ('Tenis ziemny - single', 2);
+INSERT INTO SportsCategory (SportCategoryName, DefaultPlayersNumber) VALUES ('Tenis ziemny - debel', 4);
+INSERT INTO SportsCategory (SportCategoryName, DefaultPlayersNumber) VALUES ('Squash', 2);
+INSERT INTO SportsCategory (SportCategoryName, DefaultPlayersNumber) VALUES ('Badminton - single', 2);
+INSERT INTO SportsCategory (SportCategoryName, DefaultPlayersNumber) VALUES ('Badminton - debel', 4);
+INSERT INTO SportsCategory (SportCategoryName, DefaultPlayersNumber) VALUES  ('Bieganie' , 2);
+INSERT INTO SportsCategory (SportCategoryName, DefaultPlayersNumber) VALUES ('Kolarstwo' , 2);
+INSERT INTO SportsCategory (SportCategoryName, DefaultPlayersNumber) VALUES ('Pływanie' , 2);
+INSERT INTO SportsCategory (SportCategoryName, DefaultPlayersNumber) VALUES  ('Tenis stołowy', 2);
+INSERT INTO SportsCategory (SportCategoryName, DefaultPlayersNumber) VALUES ('Wspinaczka', 2);

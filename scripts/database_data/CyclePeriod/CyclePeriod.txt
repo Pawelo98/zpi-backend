@@ -1,0 +1,15 @@
+INSERT INTO CyclePeriod (CycleType, CycleLength) VALUES ('Dzienne', 1);
+INSERT INTO CyclePeriod (CycleType, CycleLength) VALUES ('Dzienne', 2);
+INSERT INTO CyclePeriod (CycleType, CycleLength) VALUES ('Dzienne', 3);
+INSERT INTO CyclePeriod (CycleType, CycleLength) VALUES ('Tygodniowe', 1);
+INSERT INTO CyclePeriod (CycleType, CycleLength) VALUES ('Tygodniowe', 2);
+INSERT INTO CyclePeriod (CycleType, CycleLength) VALUES ('Tygodniowe', 3);
+INSERT INTO CyclePeriod (CycleType, CycleLength) VALUES ('Tygodniowe', 6);
+INSERT INTO CyclePeriod (CycleType, CycleLength) VALUES ('Miesięczne', 1);
+INSERT INTO CyclePeriod (CycleType, CycleLength) VALUES ('Miesięczne', 2);
+INSERT INTO CyclePeriod (CycleType, CycleLength) VALUES ('Miesięczne', 3);
+INSERT INTO CyclePeriod (CycleType, CycleLength) VALUES ('Miesięczne', 4);
+INSERT INTO CyclePeriod (CycleType, CycleLength) VALUES ('Miesięczne', 6);
+INSERT INTO CyclePeriod (CycleType, CycleLength) VALUES ('Roczne', 1);
+INSERT INTO CyclePeriod (CycleType, CycleLength) VALUES ('Roczne', 2);
+INSERT INTO CyclePeriod (CycleType, CycleLength) VALUES ('Roczne', 4);

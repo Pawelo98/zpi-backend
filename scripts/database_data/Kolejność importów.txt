@@ -1,0 +1,16 @@
+Po kolei należy zaimportować dane do poszczególych tabel:
+1. User
+2. UserOpinion
+3. CyclePeriod
+4. EventStatus
+5. SportsCategory
+6. EventPlace
+7. EventPlaceOpinion
+8. EventPlaceSportsCategory
+9. Event
+10. Participation
+
+Polecam importować dane do świeżo stworznej bazy, bo klucze obce
+są silnie skorelowane z ID danych wrzucanych do pustej bazy.
+Podsumowując radzę stworzyć nową bazę ze schematu,
+a następnie do niej od razu zaimportować podane tutaj dane.

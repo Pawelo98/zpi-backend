@@ -36,6 +36,12 @@ public class User {
     @Column(name="isAdmin")
     private boolean isAdmin;
 
+    @Column(name="photoLink")
+    private String photoLink;
+
+    @Column(name="description")
+    private String description;
+
     @OneToMany(mappedBy="userAccepting", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<EventPlace> userAcceptingEventPlaces;
@@ -56,11 +62,12 @@ public class User {
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<EventPlaceOpinion> userAuthorEventPlaceOpinions;
 
-    @OneToMany(mappedBy="userManaging", cascade= {CascadeType.PERSIST,
+    @OneToMany(mappedBy="id.user", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    private Set<Event> userManagingEvents;
+    private Set<Participation> userParticipations;
 
-    public User(String login, String email, String password, String name, String surname, boolean archived, String phoneNumber, boolean isAdmin) {
+    public User(String login, String email, String password, String name, String surname, boolean archived, String phoneNumber,
+                boolean isAdmin, String photoLink, String description) {
         this.login = login;
         this.email = email;
         this.password = password;
@@ -69,6 +76,8 @@ public class User {
         this.archived = archived;
         this.phoneNumber = phoneNumber;
         this.isAdmin = isAdmin;
+        this.photoLink = photoLink;
+        this.description = description;
     }
 
     public User() {}
@@ -201,12 +210,28 @@ public class User {
         this.userAuthorEventPlaceOpinions = userAuthorEventPlaceOpinions;
     }
 
-    public Set<Event> getUserManagingEvents() {
-        return userManagingEvents;
+    public Set<Participation> getUserParticipations() {
+        return userParticipations;
     }
 
-    public void setUserManagingEvents(Set<Event> userManagingEvents) {
-        this.userManagingEvents = userManagingEvents;
+    public void setUserParticipations(Set<Participation> userParticipations) {
+        this.userParticipations = userParticipations;
+    }
+
+    public String getPhotoLink() {
+        return photoLink;
+    }
+
+    public void setPhotoLink(String photoLink) {
+        this.photoLink = photoLink;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

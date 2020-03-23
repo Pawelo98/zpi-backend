@@ -45,12 +45,9 @@ public class EventPlace {
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<EventPlaceOpinion> eventPlaceEventPlaceOpinions;
 
-    @ManyToMany(cascade= {CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinTable(name="eventplacesportscategory",
-            joinColumns=@JoinColumn(name="eventPlaceID"),
-            inverseJoinColumns=@JoinColumn(name="sportsCategoryID"))
-    private List<SportsCategory> sportsCategories;
+    @OneToMany(mappedBy="id.eventPlace", cascade= {CascadeType.PERSIST,
+            CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    private Set<EventPlaceSportsCategory> eventPlaceSportsCategories;
 
     @OneToMany(mappedBy="eventPlace", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
@@ -149,12 +146,12 @@ public class EventPlace {
         this.eventPlaceEventPlaceOpinions = eventPlaceEventPlaceOpinions;
     }
 
-    public List<SportsCategory> getSportsCategories() {
-        return sportsCategories;
+    public Set<EventPlaceSportsCategory> getEventPlaceSportsCategories() {
+        return eventPlaceSportsCategories;
     }
 
-    public void setSportsCategories(List<SportsCategory> sportsCategories) {
-        this.sportsCategories = sportsCategories;
+    public void setEventPlaceSportsCategories(Set<EventPlaceSportsCategory> eventPlaceSportsCategories) {
+        this.eventPlaceSportsCategories = eventPlaceSportsCategories;
     }
 
     public Set<Event> getEventPlaceEvents() {

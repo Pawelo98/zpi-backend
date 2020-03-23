@@ -14,6 +14,7 @@ CREATE TABLE `User`
     PhoneNumber varchar(30), 
     IsAdmin bool NOT NULL, 
     PhotoLink varchar(128),
+    UserDescription varchar(256),
     CONSTRAINT pk_User PRIMARY KEY (UserID)
 ) ENGINE=InnoDB;
 
@@ -71,7 +72,8 @@ CREATE TABLE SportsCategory
 CREATE TABLE EventPlaceSportsCategory 
 (
 	SportsCategoryID int NOT NULL, 
-    EventPlaceID int NOT NULL, 
+    EventPlaceID int NOT NULL,
+    MaxEventsSimultaneously int,
     CONSTRAINT pk_EventPlaceSportsCategory PRIMARY KEY (SportsCategoryID, EventPlaceID),
     CONSTRAINT fk_eventPlaceSportsCategorySportsCategoryID FOREIGN KEY (SportsCategoryID) REFERENCES SportsCategory (SportsCategoryID),
     CONSTRAINT fk_eventPlaceSportsCategoryEventPlaceID FOREIGN KEY (EventPlaceID) REFERENCES EventPlace (EventPlaceID)
@@ -119,6 +121,7 @@ CREATE TABLE Participation
 (
 	UserID int NOT NULL, 
 	EventID int NOT NULL, 
+    QueuePosition int,
 	CONSTRAINT pk_Participation PRIMARY KEY (UserID, EventID),
     CONSTRAINT fk_participationUserID FOREIGN KEY (UserID) REFERENCES `User` (UserID),
     CONSTRAINT fk_participationEventID FOREIGN KEY (EventID) REFERENCES `Event` (EventID)

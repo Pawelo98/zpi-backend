@@ -30,6 +30,10 @@ public class SportsCategory {
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<Event> sportsCategoryEvents;
 
+    @OneToMany(mappedBy="id.sportsCategory", cascade= {CascadeType.PERSIST,
+            CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    private Set<EventPlaceSportsCategory> sportsCategoryEventPlaces;
+
     public SportsCategory(String sportCategoryName, int defaultPlayersNumber) {
         this.sportCategoryName = sportCategoryName;
         this.defaultPlayersNumber = defaultPlayersNumber;
@@ -75,6 +79,14 @@ public class SportsCategory {
 
     public void setSportsCategoryEvents(Set<Event> sportsCategoryEvents) {
         this.sportsCategoryEvents = sportsCategoryEvents;
+    }
+
+    public Set<EventPlaceSportsCategory> getSportsCategoryEventPlaces() {
+        return sportsCategoryEventPlaces;
+    }
+
+    public void setSportsCategoryEventPlaces(Set<EventPlaceSportsCategory> sportsCategoryEventPlaces) {
+        this.sportsCategoryEventPlaces = sportsCategoryEventPlaces;
     }
 
     @Override

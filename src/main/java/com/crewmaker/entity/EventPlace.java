@@ -41,22 +41,23 @@ public class EventPlace {
     @Column(name="eventPlaceStreetNumber")
     private String streetNumber;
 
+    @Column(name="photoLink")
+    private String photoLink;
+
     @OneToMany(mappedBy="eventPlace", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<EventPlaceOpinion> eventPlaceEventPlaceOpinions;
 
-    @ManyToMany(cascade= {CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinTable(name="eventplacesportscategory",
-            joinColumns=@JoinColumn(name="eventPlaceID"),
-            inverseJoinColumns=@JoinColumn(name="sportsCategoryID"))
-    private List<SportsCategory> sportsCategories;
+    @OneToMany(mappedBy="id.eventPlace", cascade= {CascadeType.PERSIST,
+            CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    private Set<EventPlaceSportsCategory> eventPlaceSportsCategories;
 
     @OneToMany(mappedBy="eventPlace", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<Event> eventPlaceEvents;
 
-    public EventPlace(User userAccepting, User userRequesting, String name, String description, String city, String postCode, String street, String streetNumber) {
+    public EventPlace(User userAccepting, User userRequesting, String name, String description, String city,
+                      String postCode, String street, String streetNumber, String photoLink) {
         this.userAccepting = userAccepting;
         this.userRequesting = userRequesting;
         this.name = name;
@@ -65,6 +66,7 @@ public class EventPlace {
         this.postCode = postCode;
         this.street = street;
         this.streetNumber = streetNumber;
+        this.photoLink = photoLink;
     }
 
     public EventPlace() {}
@@ -141,6 +143,14 @@ public class EventPlace {
         this.streetNumber = streetNumber;
     }
 
+    public String getPhotoLink() {
+        return photoLink;
+    }
+
+    public void setPhotoLink(String photoLink) {
+        this.photoLink = photoLink;
+    }
+
     public Set<EventPlaceOpinion> getEventPlaceEventPlaceOpinions() {
         return eventPlaceEventPlaceOpinions;
     }
@@ -149,12 +159,12 @@ public class EventPlace {
         this.eventPlaceEventPlaceOpinions = eventPlaceEventPlaceOpinions;
     }
 
-    public List<SportsCategory> getSportsCategories() {
-        return sportsCategories;
+    public Set<EventPlaceSportsCategory> getEventPlaceSportsCategories() {
+        return eventPlaceSportsCategories;
     }
 
-    public void setSportsCategories(List<SportsCategory> sportsCategories) {
-        this.sportsCategories = sportsCategories;
+    public void setEventPlaceSportsCategories(Set<EventPlaceSportsCategory> eventPlaceSportsCategories) {
+        this.eventPlaceSportsCategories = eventPlaceSportsCategories;
     }
 
     public Set<Event> getEventPlaceEvents() {

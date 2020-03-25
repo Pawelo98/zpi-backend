@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.sql.Time;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name="event")
@@ -27,11 +28,6 @@ public class Event {
 
     @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name="userID")
-    private User userManaging;
-
-    @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="eventPlaceID")
     private EventPlace eventPlace;
 
@@ -39,6 +35,10 @@ public class Event {
             CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="sportsCategoryID")
     private SportsCategory sportsCategory;
+
+    @OneToMany(mappedBy="id.event", cascade= {CascadeType.PERSIST,
+            CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    private Set<Participation> eventParticipations;
 
     @Column(name="eventName")
     private String name;
@@ -63,11 +63,11 @@ public class Event {
     @Column(name="eventDuration")
     private Time eventDuration;
 
-    public Event(CyclePeriod cyclePeriod, EventStatus eventStatus, User userManaging, EventPlace eventPlace, SportsCategory sportsCategory,
-                 String name, String description, Date date, int maxPlayers, boolean isCyclic, Time eventTime, Time eventDuration) {
+    public Event(CyclePeriod cyclePeriod, EventStatus eventStatus, EventPlace eventPlace, SportsCategory sportsCategory,
+                 String name, String description, Date date, int maxPlayers, boolean isCyclic, Time eventTime,
+                 Time eventDuration) {
         this.cyclePeriod = cyclePeriod;
         this.eventStatus = eventStatus;
-        this.userManaging = userManaging;
         this.eventPlace = eventPlace;
         this.sportsCategory = sportsCategory;
         this.name = name;
@@ -103,14 +103,6 @@ public class Event {
 
     public void setEventStatus(EventStatus eventStatus) {
         this.eventStatus = eventStatus;
-    }
-
-    public User getUserManaging() {
-        return userManaging;
-    }
-
-    public void setUserManaging(User userManaging) {
-        this.userManaging = userManaging;
     }
 
     public EventPlace getEventPlace() {
@@ -183,6 +175,14 @@ public class Event {
 
     public void setEventDuration(Time eventDuration) {
         this.eventDuration = eventDuration;
+    }
+
+    public Set<Participation> getEventParticipations() {
+        return eventParticipations;
+    }
+
+    public void setEventParticipations(Set<Participation> eventParticipations) {
+        this.eventParticipations = eventParticipations;
     }
 
     @Override

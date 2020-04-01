@@ -1,6 +1,7 @@
 package com.crewmaker.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name="eventPlaceSportsCategory")
@@ -29,7 +30,7 @@ public class EventPlaceSportsCategory {
 }
 
 @Embeddable
-class EventPlaceSportsCategoryId {
+class EventPlaceSportsCategoryId implements Serializable {
 
     @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH})

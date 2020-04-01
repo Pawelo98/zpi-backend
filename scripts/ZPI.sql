@@ -73,7 +73,7 @@ CREATE TABLE EventPlaceSportsCategory
 (
 	SportsCategoryID int NOT NULL, 
     EventPlaceID int NOT NULL,
-    MaxEventsSimultaneously int,
+    MaxEventsSimultaneously int DEFAULT NULL,
     CONSTRAINT pk_EventPlaceSportsCategory PRIMARY KEY (SportsCategoryID, EventPlaceID),
     CONSTRAINT fk_eventPlaceSportsCategorySportsCategoryID FOREIGN KEY (SportsCategoryID) REFERENCES SportsCategory (SportsCategoryID),
     CONSTRAINT fk_eventPlaceSportsCategoryEventPlaceID FOREIGN KEY (EventPlaceID) REFERENCES EventPlace (EventPlaceID)

@@ -1,46 +1,85 @@
 package com.crewmaker.entity;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name="user")
-public class User {
+@Table(name="User")
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="userID")
+    @Column(name="UserID")
     private int userId;
 
-    @Column(name="login")
-    private String login;
+    @Column(name="Login")
+    private String username;
 
-    @Column(name="email")
+    @Column(name="Email")
     private String email;
 
-    @Column(name="password")
+    @Column(name="Password")
     private String password;
-
-    @Column(name="name")
+    
+    @Column(name="Name")
     private String name;
 
-    @Column(name="surname")
+    @Column(name="Surname")
     private String surname;
 
-    @Column(name="archived")
+    @Column(name="Archived")
     private boolean archived;
 
-    @Column(name="phoneNumber")
+    @Column(name="PhoneNumber")
     private String phoneNumber;
 
-    @Column(name="isAdmin")
+    @Column(name="IsAdmin")
     private boolean isAdmin;
 
-    @Column(name="photoLink")
+    @Column(name="PhotoLink")
     private String photoLink;
 
-    @Column(name="description")
+    @Column(name="Description")
     private String description;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        final List<SimpleGrantedAuthority> authorities = new LinkedList<>();
+        if (this.isEnabled()) {
+            if (this.isAdmin()) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            }
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+        return authorities;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
     @OneToMany(mappedBy="userAccepting", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
@@ -66,9 +105,9 @@ public class User {
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<Participation> userParticipations;
 
-    public User(String login, String email, String password, String name, String surname, boolean archived, String phoneNumber,
+    public User(String username, String email, String password, String name, String surname, boolean archived, String phoneNumber,
                 boolean isAdmin, String photoLink, String description) {
-        this.login = login;
+        this.username = username;
         this.email = email;
         this.password = password;
         this.name = name;
@@ -90,12 +129,12 @@ public class User {
         this.userId = userId;
     }
 
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -113,6 +152,7 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
 
     public String getName() {
         return name;
@@ -238,7 +278,7 @@ public class User {
     public String toString() {
         return "User{" +
                 "userId=" + userId +
-                ", login='" + login + '\'' +
+                ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +

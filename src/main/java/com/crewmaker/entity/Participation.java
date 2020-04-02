@@ -1,6 +1,7 @@
 package com.crewmaker.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name="participation")
@@ -37,7 +38,7 @@ public class Participation {
 }
 
 @Embeddable
-class ParticipationId {
+class ParticipationId  implements Serializable {
 
     @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH})

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name="eventplace")
+@Table(name="EventPlace")
 public class EventPlace {
 
     @Id

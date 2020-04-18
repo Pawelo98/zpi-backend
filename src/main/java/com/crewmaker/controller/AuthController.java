@@ -80,7 +80,7 @@ public class AuthController {
                 signUpRequest.getSurname(),
                 false,
                 signUpRequest.getPhoneNumber(),
-                false,
+                true,
                 null,
                 null);
 

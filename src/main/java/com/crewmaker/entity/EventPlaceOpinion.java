@@ -3,7 +3,7 @@ package com.crewmaker.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name="eventplaceopinion")
+@Table(name="EventPlaceOpinion")
 public class EventPlaceOpinion {
 
     @Id

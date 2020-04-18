@@ -1,5 +1,6 @@
 package com.crewmaker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -54,6 +55,7 @@ public class User {
             joinColumns = @JoinColumn(name = "UserPermittedID"),
             inverseJoinColumns = @JoinColumn(name = "RoleAssignedID"))
     private Set<Role> roles = new HashSet<>();
+
 
     @OneToMany(mappedBy="userAccepting", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})

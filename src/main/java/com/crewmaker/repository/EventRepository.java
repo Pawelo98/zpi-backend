@@ -11,5 +11,6 @@ import java.util.List;
 public interface EventRepository extends JpaRepository<Event,Long> {
     List<Event> findAllBySportsCategorySportCategoryName(String SportCategoryName);
     List<Event> findBySportsCategorySportCategoryName(String SportCategoryName);
+    List<Event> findAllBySportsCategorySportsCategoryId(int SportCategoryID);
     Event findByEventId(int id);
 }

@@ -5,6 +5,7 @@ import com.crewmaker.entity.Event;
 import com.crewmaker.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
@@ -20,8 +21,9 @@ public class EventController {
 
     //baeldung requestparams zeby parametryzowac tutaj jaki event i przeslac sobie id sportscategory a nie string.
     @GetMapping("/api/searchevents")
-    List<EventDTO> searchEvents(){
-        return eventRepository.findBySportsCategorySportCategoryName("Koszykówka").stream().limit(10).map(event -> new EventDTO(event)).collect(Collectors.toList());
+    List<EventDTO> searchEvents(@RequestParam(name = "categoryid") int categoryID){
+        return eventRepository.findAllBySportsCategorySportsCategoryId(categoryID)
+                .stream().limit(10).map(event -> new EventDTO(event)).collect(Collectors.toList());
     }
 
     @GetMapping("/api/event")

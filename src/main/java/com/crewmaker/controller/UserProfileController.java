@@ -1,5 +1,6 @@
 package com.crewmaker.controller;
 
+import com.crewmaker.entity.Event;
 import com.crewmaker.entity.User;
 import com.crewmaker.model.UserProfile.UserProfileEvent;
 import com.crewmaker.model.UserProfile.UserProfileUser;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/userProfile")
@@ -27,14 +29,14 @@ public class UserProfileController {
         return userRepository.findByUsernameUserProfile(username);
     }
 
-    @GetMapping("/event/future/{username}")
-    public Collection<UserProfileEvent> getUserFutureEvents(@PathVariable String username) {
+    @GetMapping("/event/future/{id}")
+    public List<Event> getUserFutureEvents(@PathVariable int id) {
         //return eventRepository.findFutureEventsByUsername(username);
-        return eventRepository.findPastEventsByUsername(username);
+        return eventRepository.findByEventId(1);
     }
 
-    @GetMapping("/event/past/{username}")
-    public Collection<UserProfileEvent> getUserPastEvents(@PathVariable String username) {
-        return eventRepository.findPastEventsByUsername(username);
+    @GetMapping("/event/past/{id}")
+    public List<Event> getUserPastEvents(@PathVariable int id) {
+        return eventRepository.findByEventId(1);
     }
 }

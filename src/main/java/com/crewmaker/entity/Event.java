@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Table(name="event")
+@Table(name="Event")
 public class Event {
 
     @Id

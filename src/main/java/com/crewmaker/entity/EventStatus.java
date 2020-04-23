@@ -1,10 +1,12 @@
 package com.crewmaker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name="eventstatus")
+@Table(name="EventStatus")
 public class EventStatus {
 
     @Id
@@ -15,6 +17,7 @@ public class EventStatus {
     @Column(name="statusName")
     private String statusName;
 
+    @JsonIgnore
     @OneToMany(mappedBy="eventStatus", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<Event> eventStatusEvents;

@@ -1,11 +1,13 @@
 package com.crewmaker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name="sportscategory")
+@Table(name="SportsCategory")
 public class SportsCategory {
 
     @Id
@@ -26,6 +28,7 @@ public class SportsCategory {
             inverseJoinColumns=@JoinColumn(name="eventPlaceID"))
     private List<EventPlace> eventPlaces;
 
+    @JsonIgnore
     @OneToMany(mappedBy="sportsCategory", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<Event> sportsCategoryEvents;

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name="eventPlaceSportsCategory")
+@Table(name="EventPlaceSportsCategory")
 public class EventPlaceSportsCategory {
 
     @EmbeddedId

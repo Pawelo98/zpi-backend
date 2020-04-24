@@ -1,5 +1,7 @@
 package com.crewmaker.entity;
 
+
+
 import javax.persistence.*;
 
 @Entity

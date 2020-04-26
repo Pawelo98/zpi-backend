@@ -23,14 +23,15 @@ public class UserProfileController {
         return userRepository.findByUsernameUserProfile(username);
     }
 
+
+
+
     /*
     @GetMapping("/event/future/{id}")
     public List<Event> getUserFutureEvents(@PathVariable int id) {
         //return eventRepository.findFutureEventsByUsername(username);
         return eventRepository.findByEventId(1);
     }
-
-
 
     @GetMapping("/event/past/{id}")
     public List<Event> getUserPastEvents(@PathVariable int id) {

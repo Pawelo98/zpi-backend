@@ -8,12 +8,19 @@ import com.crewmaker.exception.ResourceNotFoundException;
 import com.crewmaker.model.UserProfile.UserProfileUser;
 import com.crewmaker.entity.User;
 import com.crewmaker.repository.UserRepository;
+import com.crewmaker.reqbody.ApiResponse;
+import com.crewmaker.reqbody.UserUpdateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.validation.Valid;
+import java.net.URI;
 
 @Controller
 @CrossOrigin
@@ -43,6 +50,27 @@ public class UserController {
         UserProfileUser userProfile = new UserProfileUser(user.getUsername(), user.getEmail(), user.getPhoneNumber(), user.getPhotoLink(), user.getDescription(), user.getName(), user.getSurname());
 
         return userProfile;
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/updateUser")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserUpdateRequest userUpdateRequest) {
+        User user = userRepository.findByUsername(userUpdateRequest.getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", userUpdateRequest.getUsername()));
+        // Creating user's account
+        user.setEmail(userUpdateRequest.getEmail());
+        user.setName(userUpdateRequest.getName());
+        user.setSurname(userUpdateRequest.getSurname());
+        user.setPhoneNumber(userUpdateRequest.getPhoneNumber());
+        user.setDescription(userUpdateRequest.getDescription());
+
+        User result = userRepository.save(user);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/users/{username}")
+                .buildAndExpand(result.getUsername()).toUri();
+
+        return ResponseEntity.created(location).body(new ApiResponse(true, "User data changed successfully"));
     }
 
     @GetMapping("/user/checkUsernameAvailability")

@@ -1,12 +1,19 @@
 package com.crewmaker.controller;
 
+import com.crewmaker.entity.User;
+import com.crewmaker.exception.ResourceNotFoundException;
 import com.crewmaker.model.UserProfile.UserProfileUser;
 import com.crewmaker.repository.EventRepository;
 import com.crewmaker.repository.UserRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.crewmaker.reqbody.ApiResponse;
+import com.crewmaker.reqbody.UserUpdateRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.validation.Valid;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/userProfile")
@@ -22,9 +29,6 @@ public class UserProfileController {
     public UserProfileUser getUserProfiles(@PathVariable String username) {
         return userRepository.findByUsernameUserProfile(username);
     }
-
-
-
 
     /*
     @GetMapping("/event/future/{id}")

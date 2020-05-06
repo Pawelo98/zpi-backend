@@ -52,7 +52,6 @@ public class UserController {
         return userProfile;
     }
 
-    
     @PostMapping("/updateUser")
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserUpdateRequest userUpdateRequest) {
         User user = userRepository.findByUsername(userUpdateRequest.getUsername())

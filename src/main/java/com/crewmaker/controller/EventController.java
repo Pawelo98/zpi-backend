@@ -2,9 +2,13 @@ package com.crewmaker.controller;
 
 import com.crewmaker.dto.EventDTO;
 import com.crewmaker.entity.Event;
+import com.crewmaker.entity.User;
+import com.crewmaker.exception.ResourceNotFoundException;
 import com.crewmaker.repository.EventRepository;
+import com.crewmaker.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,6 +22,8 @@ public class EventController {
 
     @Autowired
     EventRepository eventRepository;
+    @Autowired
+    UserRepository userRepository;
 
     //baeldung requestparams zeby parametryzowac tutaj jaki event i przeslac sobie id sportscategory a nie string.
     @GetMapping("/api/searchevents")
@@ -36,4 +42,21 @@ public class EventController {
     String test(){
         return "TEST";
     }
+
+    @GetMapping("api/myevents/{username}")
+    List<EventDTO> getMyEvents(@PathVariable(value = "username") String username) {
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        return eventRepository.findAllByEventParticipationsIdUser(user)
+                .stream().map(event -> new EventDTO(event)).collect(Collectors.toList());
+
+    }
+
+    @GetMapping("/api/counteventsparticipants")
+    long countParticipants(@RequestParam int eventID){
+        return eventRepository.countAllByEventParticipationsIdEvent(eventRepository.findByEventId(eventID));
+    }
+
 }

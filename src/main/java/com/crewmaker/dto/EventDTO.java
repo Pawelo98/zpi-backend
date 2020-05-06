@@ -23,6 +23,7 @@ public class EventDTO {
         eventName = event.getName();
         eventDate = event.getDate();
         eventTime = event.getEventTime();
+        eventTime.setTime(event.getEventTime().getTime() - 3600000);
         eventPlaceName = event.getEventPlace().getName();
         eventPlaceStreetName = event.getEventPlace().getStreet();
         eventPlaceCity = event.getEventPlace().getCity();

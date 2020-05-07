@@ -17,6 +17,7 @@ public class EventDTO {
     private int maxPlayers;
     private String eventSportName;
     private String eventPlaceStreetNumber;
+    private Time eventDuration;
 
     public EventDTO(Event event){
         eventID = event.getEventId();
@@ -30,6 +31,7 @@ public class EventDTO {
         maxPlayers = event.getMaxPlayers();
         eventSportName = event.getSportsCategory().getSportCategoryName();
         eventPlaceStreetNumber = event.getEventPlace().getStreetNumber();
+        eventDuration = event.getEventDuration();
     }
 
     public int getEventID() {
@@ -110,5 +112,13 @@ public class EventDTO {
 
     public void setEventPlaceStreetNumber(String eventPlaceStreetNumber) {
         this.eventPlaceStreetNumber = eventPlaceStreetNumber;
+    }
+
+    public Time getEventDuration() {
+        return eventDuration;
+    }
+
+    public void setEventDuration(Time eventDuration) {
+        this.eventDuration = eventDuration;
     }
 }

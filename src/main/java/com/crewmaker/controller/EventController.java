@@ -51,10 +51,9 @@ public class EventController {
     }
 
     @GetMapping("/api/event")
-    EventDTO findoneevent () {
-        return new EventDTO(eventRepository.findByEventId(6));
+    EventDTO findOneEvent (@RequestParam(name = "eventId") int eventId) {
+        return new EventDTO(eventRepository.findByEventId(eventId));
     }
-
 
     @GetMapping("/api/test")
     String test(){

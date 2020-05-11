@@ -11,12 +11,18 @@ public class EventDTO {
     private String eventName;
     private Date eventDate;
     private Time eventTime;
-    private String eventPlaceName;
-    private String eventPlaceStreetName;
-    private String eventPlaceCity;
+    private String eventDescription;
+    private boolean isCyclic;
+    private String cycleType;
+    private int cycleLength;
     private int maxPlayers;
-    private String eventSportName;
+    private String eventPlaceName;
+    private String eventPlaceDescription;
+    private String eventPlaceStreetName;
     private String eventPlaceStreetNumber;
+    private String eventPlacePostCode;
+    private String eventPlaceCity;
+    private String eventSportName;
     private Time eventDuration;
 
     public EventDTO(Event event){
@@ -24,6 +30,14 @@ public class EventDTO {
         eventName = event.getName();
         eventDate = event.getDate();
         eventTime = event.getEventTime();
+        eventDescription = event.getDescription();
+        isCyclic = event.isCyclic();
+        if(isCyclic) {
+            cycleType = event.getCyclePeriod().getCycleType();
+            cycleLength = event.getCyclePeriod().getCycleLength();
+        }
+        eventPlaceDescription = event.getEventPlace().getDescription();
+        eventPlacePostCode = event.getEventPlace().getPostCode();
         eventTime.setTime(event.getEventTime().getTime() - 3600000);
         eventPlaceName = event.getEventPlace().getName();
         eventPlaceStreetName = event.getEventPlace().getStreet();
@@ -32,6 +46,54 @@ public class EventDTO {
         eventSportName = event.getSportsCategory().getSportCategoryName();
         eventPlaceStreetNumber = event.getEventPlace().getStreetNumber();
         eventDuration = event.getEventDuration();
+    }
+
+    public String getEventDescription() {
+        return eventDescription;
+    }
+
+    public void setEventDescription(String eventDescription) {
+        this.eventDescription = eventDescription;
+    }
+
+    public boolean isCyclic() {
+        return isCyclic;
+    }
+
+    public void setCyclic(boolean cyclic) {
+        isCyclic = cyclic;
+    }
+
+    public String getCycleType() {
+        return cycleType;
+    }
+
+    public void setCycleType(String cycleType) {
+        this.cycleType = cycleType;
+    }
+
+    public int getCycleLength() {
+        return cycleLength;
+    }
+
+    public void setCycleLength(int cycleLength) {
+        this.cycleLength = cycleLength;
+    }
+
+    public String getEventPlaceDescription() {
+        return eventPlaceDescription;
+    }
+
+    public void setEventPlaceDescription(String eventPlaceDescription) {
+        this.eventPlaceDescription = eventPlaceDescription;
+    }
+
+    public String getEventPlacePostCode() {
+        return eventPlacePostCode;
+    }
+
+    public void setEventPlacePostCode(String eventPlacePostCode) {
+        this.eventPlacePostCode = eventPlacePostCode;
     }
 
     public int getEventID() {

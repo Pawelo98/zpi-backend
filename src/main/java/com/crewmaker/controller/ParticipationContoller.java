@@ -4,6 +4,7 @@ import com.crewmaker.entity.Event;
 import com.crewmaker.entity.Participation;
 import com.crewmaker.entity.User;
 import com.crewmaker.exception.ResourceNotFoundException;
+import com.crewmaker.model.UserProfile.UserProfileUser;
 import com.crewmaker.repository.EventRepository;
 import com.crewmaker.repository.ParticipationRepository;
 import com.crewmaker.repository.UserRepository;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 public class ParticipationContoller {
@@ -56,7 +58,11 @@ public class ParticipationContoller {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
-
         return  participationRepository.existsByIdEventAndIdUser(event,user);
+    }
+
+    @GetMapping("/api/eventParticipants")
+    public List<UserProfileUser> getEventParticipants(@RequestParam int eventID){
+        return participationRepository.findParticipatorsOfEvent(eventID);
     }
 }

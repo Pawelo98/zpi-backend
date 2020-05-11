@@ -11,11 +11,11 @@ public class Participation {
     ParticipationId id;
 
     @Column(name="queuePosition")
-    private int queuePosition;
+    private Integer queuePosition;
 
     public Participation() {}
 
-    public Participation(User user, Event event, int queuePosition) {
+    public Participation(User user, Event event, Integer queuePosition) {
         this.id = new ParticipationId(user, event);
         this.queuePosition = queuePosition;
     }
@@ -28,11 +28,11 @@ public class Participation {
         this.id = id;
     }
 
-    public int getQueueNumber() {
+    public Integer getQueueNumber() {
         return queuePosition;
     }
 
-    public void setQueueNumber(int queueNumber) {
+    public void setQueueNumber(Integer queueNumber) {
         this.queuePosition = queueNumber;
     }
 }

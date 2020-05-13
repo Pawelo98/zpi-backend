@@ -6,6 +6,7 @@ import com.crewmaker.entity.User;
 import com.crewmaker.model.UserProfile.UserProfileUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,6 +17,6 @@ public interface ParticipationRepository extends JpaRepository<Participation,Lon
 
     @Query("SELECT new com.crewmaker.model.UserProfile.UserProfileUser(u.username, u.email, u.phoneNumber, u.photoLink, " +
             "u.description, u.name, u.surname) " +
-            "FROM Event e, Participation p, User u WHERE e.eventId = :eventId")
-    List<UserProfileUser> findParticipatorsOfEvent(int eventId);
+            "FROM Event e, Participation p, User u WHERE e.eventId = :eventID")
+    List<UserProfileUser> findParticipatorsOfEvent(@Param("eventID") int eventID);
 }

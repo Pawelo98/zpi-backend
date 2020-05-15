@@ -1,7 +1,11 @@
 package com.crewmaker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name="Participation")
@@ -50,8 +54,6 @@ class ParticipationId  implements Serializable {
     @JoinColumn(name="eventID")
     private Event event;
 
-
-
     public ParticipationId() {}
 
     public ParticipationId(User user, Event event) {
@@ -74,4 +76,5 @@ class ParticipationId  implements Serializable {
     public void setEvent(Event event) {
         this.event = event;
     }
+
 }

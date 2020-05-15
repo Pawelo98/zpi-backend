@@ -20,6 +20,10 @@ public class EventPlaceSportsCategory {
         this.maxEventsSimultaneously = maxEventsSimultaneously;
     }
 
+    public EventPlaceSportsCategory(EventPlace eventPlace, SportsCategory sportsCategory) {
+        this.id = new EventPlaceSportsCategoryId(eventPlace, sportsCategory);
+    }
+
     public EventPlaceSportsCategoryId getId() {
         return id;
     }

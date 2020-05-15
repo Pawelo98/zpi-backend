@@ -62,7 +62,9 @@ public class ParticipationContoller {
     }
 
     @GetMapping("/api/eventParticipants")
-    public List<UserProfileUser> getEventParticipants(@RequestParam int eventID){
-        return participationRepository.findParticipatorsOfEvent(eventID);
+    public List<User> getEventParticipants(@RequestParam int eventID){
+        //return participationRepository.findParticipatorsOfEvent(eventID);
+        Event event = eventRepository.findByEventId(eventID);
+        return userRepository.findDistinctByUserParticipationsId_IdEvent(event);
     }
 }

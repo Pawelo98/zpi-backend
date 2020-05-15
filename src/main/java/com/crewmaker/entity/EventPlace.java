@@ -58,9 +58,8 @@ public class EventPlace {
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<Event> eventPlaceEvents;
 
-    public EventPlace(User userAccepting, User userRequesting, String name, String description, String city,
+    public EventPlace(User userRequesting, String name, String description, String city,
                       String postCode, String street, String streetNumber, String photoLink) {
-        this.userAccepting = userAccepting;
         this.userRequesting = userRequesting;
         this.name = name;
         this.description = description;

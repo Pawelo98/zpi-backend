@@ -14,7 +14,4 @@ import java.util.List;
 public interface ParticipationRepository extends JpaRepository<Participation,Long> {
     Boolean existsByIdEventAndIdUser(Event event, User user);
 
-    @Query("SELECT new com.crewmaker.model.UserProfile.UserProfileUser(u.username, u.email, u.phoneNumber, u.photoLink, u.description) " +
-            "Event e where e.eventId = :eventId, Participation p, User u ")
-    List<UserProfileUser> findParticipatorsOfEvent(int eventId);
 }

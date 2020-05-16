@@ -54,31 +54,38 @@ public class User {
     @JoinTable(name = "UserRoles",
             joinColumns = @JoinColumn(name = "UserPermittedID"),
             inverseJoinColumns = @JoinColumn(name = "RoleAssignedID"))
+    @JsonIgnore
     private Set<Role> roles = new HashSet<>();
 
 
     @OneToMany(mappedBy="userAccepting", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonIgnore
     private Set<EventPlace> userAcceptingEventPlaces;
 
     @OneToMany(mappedBy="userRequesting", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonIgnore
     private Set<EventPlace> userRequestingEventPlaces;
 
     @OneToMany(mappedBy="userAuthor", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonIgnore
     private Set<UserOpinion> userAuthorUserOpinions;
 
     @OneToMany(mappedBy="userAbout", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonIgnore
     private Set<UserOpinion> userAboutUserOpinions;
 
     @OneToMany(mappedBy="userAuthor", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonIgnore
     private Set<EventPlaceOpinion> userAuthorEventPlaceOpinions;
 
     @OneToMany(mappedBy="id.user", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonIgnore
     private Set<Participation> userParticipations;
 
     public User(String username, String email, String password, String name, String surname, boolean archived, String phoneNumber,

@@ -11,7 +11,7 @@ public class EventPlaceSportsCategory {
     EventPlaceSportsCategoryId id;
 
     @Column(name="maxEventsSimultaneously")
-    private int maxEventsSimultaneously;
+    private Integer maxEventsSimultaneously;
 
     public EventPlaceSportsCategory() {}
 
@@ -30,6 +30,14 @@ public class EventPlaceSportsCategory {
 
     public void setId(EventPlaceSportsCategoryId id) {
         this.id = id;
+    }
+
+    public Integer getMaxEventsSimultaneously() {
+        return maxEventsSimultaneously;
+    }
+
+    public void setMaxEventsSimultaneously(Integer maxEventsSimultaneously) {
+        this.maxEventsSimultaneously = maxEventsSimultaneously;
     }
 }
 

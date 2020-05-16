@@ -21,6 +21,7 @@ public class SportsCategory {
     @Column(name="defaultPlayersNumber")
     private int defaultPlayersNumber;
 
+    @JsonIgnore
     @ManyToMany(cascade= {CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH})
     @JoinTable(name="eventplacesportscategory",
@@ -33,6 +34,7 @@ public class SportsCategory {
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<Event> sportsCategoryEvents;
 
+    @JsonIgnore
     @OneToMany(mappedBy="id.sportsCategory", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<EventPlaceSportsCategory> sportsCategoryEventPlaces;

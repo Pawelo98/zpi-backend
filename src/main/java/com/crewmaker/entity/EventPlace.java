@@ -3,6 +3,7 @@ package com.crewmaker.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -45,6 +46,9 @@ public class EventPlace {
     @Column(name="photoLink")
     private String photoLink;
 
+    @Column(name="isAccepted")
+    private Boolean isAccepted;
+
     @OneToMany(mappedBy="eventPlace", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<EventPlaceOpinion> eventPlaceEventPlaceOpinions;
@@ -52,6 +56,25 @@ public class EventPlace {
     @OneToMany(mappedBy="id.eventPlace", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<EventPlaceSportsCategory> eventPlaceSportsCategories;
+
+
+    @ManyToMany(cascade = {CascadeType.PERSIST,
+            CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinTable(
+            name = "EventPlaceSportsCategory",
+            joinColumns = { @JoinColumn(name = "eventPlaceID") },
+            inverseJoinColumns = { @JoinColumn(name = "sportsCategoryID") }
+    )
+    Set<SportsCategory> sportsCategory = new HashSet<>();
+
+
+    public Set<SportsCategory> getSportsCategory() {
+        return sportsCategory;
+    }
+
+    public void setSportsCategory(Set<SportsCategory> sportsCategory) {
+        this.sportsCategory = sportsCategory;
+    }
 
     @JsonIgnore
     @OneToMany(mappedBy="eventPlace", cascade= {CascadeType.PERSIST,
@@ -68,6 +91,14 @@ public class EventPlace {
         this.street = street;
         this.streetNumber = streetNumber;
         this.photoLink = photoLink;
+        this.isAccepted = false;
+    }
+    public String getUserAcceptingUsername() {
+        return userAccepting.getUsername();
+    }
+
+    public String getUserRequestingUsername() {
+        return userRequesting.getUsername();
     }
 
     public EventPlace() {}
@@ -150,6 +181,14 @@ public class EventPlace {
 
     public void setPhotoLink(String photoLink) {
         this.photoLink = photoLink;
+    }
+
+    public Boolean getAccepted() {
+        return isAccepted;
+    }
+
+    public void setAccepted(Boolean accepted) {
+        isAccepted = accepted;
     }
 
     public Set<EventPlaceOpinion> getEventPlaceEventPlaceOpinions() {

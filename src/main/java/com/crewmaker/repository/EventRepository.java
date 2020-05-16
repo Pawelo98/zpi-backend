@@ -22,7 +22,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllByEventParticipationsIdUser(User user);
     Long countAllByEventParticipationsIdEvent(Event event);
     List<Event> findAllByDateAfterAndAndSportsCategorySportsCategoryIdOrderByDate
-            (Date eventDate, int SportCategoryID);
+            (Date date, int SportCategoryID);
     List<Event> findAllByDateAfterAndEventTimeAfterAndSportsCategorySportsCategoryIdOrderByDateAscEventTimeAsc(
             Date eventDate, Time eventTime, int SportCategoryID
     );

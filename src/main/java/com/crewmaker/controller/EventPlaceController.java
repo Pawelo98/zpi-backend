@@ -10,15 +10,13 @@ import com.crewmaker.repository.EventPlaceRepository;
 import com.crewmaker.repository.EventPlaceSportsCategoryRepository;
 import com.crewmaker.repository.SportsCategoryRepository;
 import com.crewmaker.repository.UserRepository;
-import com.crewmaker.reqbody.ApiResponse;
-import com.crewmaker.reqbody.EventPlaceResponse;
-import com.crewmaker.reqbody.NewEventPlaceRequest;
-import com.crewmaker.reqbody.PagingOptionsRequest;
+import com.crewmaker.reqbody.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -93,6 +91,17 @@ public class EventPlaceController {
                         PageRequest.of(activePage - 1, size, Sort.by(Sort.Direction.valueOf(filters[0]), filters[1])));
                 break;
             }
+            case "ARCH": {
+                page = eventPlaceRepository.findAllByIsArchivedIsTrue(
+                        PageRequest.of(activePage - 1, size, Sort.by(Sort.Direction.valueOf(filters[0]), filters[1])));
+                break;
+            }
+            case "NOTARCH": {
+                page = eventPlaceRepository.findAllByIsArchivedIsFalse(
+                        PageRequest.of(activePage - 1, size, Sort.by(Sort.Direction.valueOf(filters[0]), filters[1])));
+                break;
+            }
+
             default: {
                 page = eventPlaceRepository.findAll(
                         PageRequest.of(activePage-1, size, Sort.by(Sort.Direction.ASC, "eventPlaceId")));
@@ -108,6 +117,48 @@ public class EventPlaceController {
         });
 
         return eventPlaceResponse;
+    }
+
+    @GetMapping("/acceptEventPlace")
+    ResponseEntity<?> acceptEventPlace(@RequestParam(required = true, name = "eventPlaceID") int eventPlaceID){
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+
+        EventPlace eventPlace = eventPlaceRepository.findById(eventPlaceID)
+                    .orElseThrow(() -> new ResourceNotFoundException("EventPlace", "eventPlaceId", eventPlaceID));
+        eventPlace.setAccepted(true);
+        eventPlace.setUserAccepting(user);
+        eventPlaceRepository.save(eventPlace);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/eventPlace/{eventPlaceId}")
+                .buildAndExpand(eventPlace.getEventPlaceId()).toUri();
+
+        return ResponseEntity.created(location).body(new EventPlaceAcceptedResponse(true,  eventPlace.getAccepted(), user.getUsername(), "User data changed successfully"));
+    }
+
+    @GetMapping("/archiveEventPlace")
+    ResponseEntity<?> deleteEventPlace(@RequestParam(required = true, name = "eventPlaceID") int eventPlaceID,
+                                       @RequestParam(required = true, name = "currentArchiveStatus") boolean currentArchiveStatus){
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+
+        EventPlace eventPlace = eventPlaceRepository.findById(eventPlaceID)
+                .orElseThrow(() -> new ResourceNotFoundException("EventPlace", "eventPlaceId", eventPlaceID));
+        eventPlace.setArchived(!currentArchiveStatus);
+        eventPlaceRepository.save(eventPlace);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/eventPlace/{eventPlaceId}")
+                .buildAndExpand(eventPlace.getEventPlaceId()).toUri();
+
+        return ResponseEntity.created(location).body(new ApiResponse(true, "Event place archive status has been changed"));
     }
 
 }

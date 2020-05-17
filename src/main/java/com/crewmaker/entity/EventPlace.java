@@ -49,6 +49,17 @@ public class EventPlace {
     @Column(name="isAccepted")
     private Boolean isAccepted;
 
+    @Column(name="isArchived")
+    private Boolean isArchived;
+
+    public Boolean getArchived() {
+        return isArchived;
+    }
+
+    public void setArchived(Boolean archived) {
+        isArchived = archived;
+    }
+
     @OneToMany(mappedBy="eventPlace", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<EventPlaceOpinion> eventPlaceEventPlaceOpinions;
@@ -92,6 +103,7 @@ public class EventPlace {
         this.streetNumber = streetNumber;
         this.photoLink = photoLink;
         this.isAccepted = false;
+        this.isArchived = false;
     }
     public String getUserAcceptingUsername() {
         return userAccepting.getUsername();

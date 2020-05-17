@@ -24,6 +24,7 @@ public class EventPlaceResponse {
     private String userRequestingUsername;
     private String userAcceptingUsername;
     private Boolean isAccepted;
+    private Boolean isArchived;
 
     public EventPlaceResponse(EventPlace eventPlace){
         eventPlaceID = eventPlace.getEventPlaceId();
@@ -43,7 +44,7 @@ public class EventPlaceResponse {
         else
             userAcceptingUsername = eventPlace.getUserAcceptingUsername();
 
-
+        isArchived = eventPlace.getArchived();
         //sportsCategories =eventPlace.getEventPlaceSportsCategories();
     }
 }

@@ -10,8 +10,10 @@ import com.crewmaker.repository.ParticipationRepository;
 import com.crewmaker.repository.UserRepository;
 import com.crewmaker.reqbody.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,6 +51,20 @@ public class ParticipationContoller {
                 .buildAndExpand(newParticipation.getId()).toUri();
 
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+    }
+
+    @GetMapping("/api/leaveevent")
+    public ResponseEntity<?> leaveEvent(@RequestParam int eventID){
+        Event event = eventRepository.findByEventId(eventID);
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        Participation participation = participationRepository.findByIdEventAndIdUser(event, user);
+        participationRepository.delete(participation);
+
+        return new ResponseEntity<>(eventID, HttpStatus.OK);
     }
 
     @GetMapping("/api/existsparticipation")

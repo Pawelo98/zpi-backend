@@ -11,5 +11,6 @@ public interface EventPlaceRepository extends JpaRepository<EventPlace, Integer>
     Page<EventPlace> findAllByIsAcceptedIsFalse(Pageable pageable);
     Page<EventPlace> findAllByIsAcceptedIsTrue(Pageable pageable);
     Page<EventPlace> findAllByIsArchivedIsFalse(Pageable pageable);
-    Page<EventPlace> findAllByIsArchivedIsTrue(Pageable pageable);
+    Page<EventPlace> findAllByIsArchivedIsTrue(Pageable pageable);  
+    EventPlace findByEventPlaceId(int id);
 }

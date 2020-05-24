@@ -44,11 +44,15 @@ public class User {
     @Column(name="PhoneNumber")
     private String phoneNumber;
 
-    @Column(name="PhotoLink")
-    private String photoLink;
+    @OneToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name="ImageID")
+    @JsonIgnore
+    private UserProfileImage userProfileImage;
 
     @Column(name="Description")
     private String description;
+
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "UserRoles",
@@ -98,7 +102,6 @@ public class User {
         this.archived = archived;
         this.phoneNumber = phoneNumber;
         this.enabled = enabled;
-        this.photoLink = photoLink;
         this.description = description;
     }
 

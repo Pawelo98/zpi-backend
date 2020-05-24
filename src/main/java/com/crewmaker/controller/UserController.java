@@ -4,15 +4,18 @@ import com.crewmaker.authentication.AvailabilityConfirmation;
 import com.crewmaker.authentication.CurrentUser;
 import com.crewmaker.authentication.UserPrincipal;
 import com.crewmaker.authentication.UserSummary;
+import com.crewmaker.entity.UserProfileImage;
 import com.crewmaker.exception.ResourceNotFoundException;
 import com.crewmaker.model.UserProfile.UserProfileUser;
 import com.crewmaker.entity.User;
 import com.crewmaker.repository.UserRepository;
 import com.crewmaker.reqbody.ApiResponse;
+import com.crewmaker.reqbody.ImageResponse;
 import com.crewmaker.reqbody.UserUpdateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -21,6 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Optional;
 
 @Controller
 @CrossOrigin
@@ -47,9 +51,19 @@ public class UserController {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
-        UserProfileUser userProfile = new UserProfileUser(user.getUsername(), user.getEmail(), user.getPhoneNumber(), user.getPhotoLink(), user.getDescription(), user.getName(), user.getSurname());
+        UserProfileUser userProfile = new UserProfileUser(user.getUsername(), user.getEmail(), user.getPhoneNumber(), user.getDescription(), user.getName(), user.getSurname());
 
         return userProfile;
+    }
+
+    @GetMapping("/usersProfileImage/{username}")
+    public ResponseEntity<ImageResponse> getUserProfileImage(@PathVariable(value = "username") String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        return Optional.ofNullable(user.getUserProfileImage()).map(retrivedImage -> ResponseEntity
+                .ok()
+                .body(new ImageResponse(retrivedImage.getBinaryData(),retrivedImage.getName()))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/updateUser")

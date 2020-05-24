@@ -17,7 +17,7 @@ public interface ParticipationRepository extends JpaRepository<Participation,Lon
 
     Participation findByIdEventAndIdUser(Event event, User user);
 
-    @Query("SELECT new com.crewmaker.model.UserProfile.UserProfileUser(u.username, u.email, u.phoneNumber, u.photoLink, " +
+    @Query("SELECT new com.crewmaker.model.UserProfile.UserProfileUser(u.username, u.email, u.phoneNumber, " +
             "u.description, u.name, u.surname) " +
             "FROM Event e, Participation p, User u WHERE e.eventId = :eventID")
     List<UserProfileUser> findParticipatorsOfEvent(@Param("eventID") int eventID);

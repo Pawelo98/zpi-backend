@@ -1,5 +1,6 @@
 package com.crewmaker.controller;
 
+import com.crewmaker.dto.EventPlaceOpinionDTO;
 import com.crewmaker.entity.Event;
 import com.crewmaker.entity.EventPlace;
 import com.crewmaker.entity.EventPlaceOpinion;
@@ -19,6 +20,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @CrossOrigin
@@ -48,5 +51,10 @@ public class EventPlaceOpinionController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse(true, "Opinion added"));
+    }
+
+    @GetMapping("/geteventplaceopinions")
+    public List<EventPlaceOpinionDTO> getEventPlaceOpinions (@RequestParam int eventplaceID){
+        return eventPlaceOpinionRepository.findAllByEventPlaceEventPlaceId(eventplaceID).stream().map(el -> new EventPlaceOpinionDTO(el)).collect(Collectors.toList());
     }
 }

@@ -106,6 +106,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers("/api/eventParticipants")
                 .permitAll()
+                .antMatchers("/api/usersProfileImage/*")
+                .permitAll()
                 .antMatchers("/api/leaveevent")
                 .permitAll()
                 .antMatchers("/api/user/checkUsernameAvailability", "/api/user/checkEmailAvailability")

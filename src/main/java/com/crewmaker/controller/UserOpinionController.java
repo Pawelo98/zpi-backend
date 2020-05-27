@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 public class UserOpinionController {
     @Autowired
     private UserOpinionRepository userOpinionRepository;
+    @Autowired
     private UserRepository userRepository;
 
     @GetMapping("/useropinions")
@@ -46,6 +47,7 @@ public class UserOpinionController {
 
     @PostMapping("/newUserOpinion")
     public ResponseEntity<?> addNewUserOpinion(@RequestBody UserOpinionRequest userOpinionRequest) {
+
         User author = userRepository.findByUsername(userOpinionRequest.getUserAuthor())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", userOpinionRequest.getUserAuthor()));
 

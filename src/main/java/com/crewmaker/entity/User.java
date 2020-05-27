@@ -53,7 +53,6 @@ public class User {
     @Column(name="Description")
     private String description;
 
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "UserRoles",
             joinColumns = @JoinColumn(name = "UserPermittedID"),
@@ -91,6 +90,11 @@ public class User {
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JsonIgnore
     private Set<Participation> userParticipations;
+
+    @OneToMany(mappedBy="userInitiator", cascade= {CascadeType.PERSIST,
+            CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonIgnore
+    private Set<Event> userEvents;
 
     public User(String username, String email, String password, String name, String surname, boolean archived, String phoneNumber,
                 boolean enabled, String photoLink, String description) {

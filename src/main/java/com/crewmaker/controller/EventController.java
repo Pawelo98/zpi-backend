@@ -1,19 +1,21 @@
 package com.crewmaker.controller;
 
 import com.crewmaker.dto.EventDTO;
-import com.crewmaker.entity.Event;
-import com.crewmaker.entity.User;
+import com.crewmaker.entity.*;
 import com.crewmaker.exception.ResourceNotFoundException;
-import com.crewmaker.repository.EventRepository;
-import com.crewmaker.repository.UserRepository;
+import com.crewmaker.repository.*;
+import com.crewmaker.reqbody.ApiResponse;
+import com.crewmaker.reqbody.NewEventPlaceRequest;
+import com.crewmaker.reqbody.NewEventRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
+import java.sql.Time;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -24,9 +26,17 @@ import java.util.stream.Collectors;
 public class EventController {
 
     @Autowired
-    EventRepository eventRepository;
+    private EventRepository eventRepository;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+    @Autowired
+    private CyclePeriodRepository cyclePeriodRepository;
+    @Autowired
+    private EventStatusRepository eventStatusRepository;
+    @Autowired
+    private EventPlaceRepository eventPlaceRepository;
+    @Autowired
+    private SportsCategoryRepository sportsCategoryRepository;
 
     //baeldung requestparams zeby parametryzowac tutaj jaki event i przeslac sobie id sportscategory a nie string.
    /* @GetMapping("/api/searchevents")
@@ -82,4 +92,27 @@ public class EventController {
 
     }
 
+    @PostMapping("api/newEvent")
+    public ResponseEntity<?> addNewEvent(@RequestBody NewEventRequest newEvent) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username)
+               .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        CyclePeriod cyclePeriod = cyclePeriodRepository.findByCyclePeriodId(newEvent.getCycleId());
+        EventStatus eventStatus = eventStatusRepository.findByEventStatusId(1);
+        EventPlace eventPlace = eventPlaceRepository.findByEventPlaceId(newEvent.getEventPlaceId());
+        SportsCategory sportsCategory = sportsCategoryRepository.findBySportsCategoryId(newEvent.getSportCategoryId());
+
+        Event event = new Event(cyclePeriod, eventStatus, eventPlace, sportsCategory, newEvent.getEventName(),
+                newEvent.getEventDescription(), newEvent.getEventDate(), newEvent.getMaxPlayers(), newEvent.isCyclic(),
+                newEvent.getEventTime(), newEvent.getEventDuration(), user);
+
+        Event result = eventRepository.save(event);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/users/{username}")
+                .buildAndExpand(result.getEventId()).toUri();
+
+        return ResponseEntity.created(location).body(new ApiResponse(true, "New event added successfully"));
+    }
 }

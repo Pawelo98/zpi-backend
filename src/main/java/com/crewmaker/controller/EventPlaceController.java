@@ -1,15 +1,11 @@
 package com.crewmaker.controller;
 
 
-import com.crewmaker.entity.EventPlace;
-import com.crewmaker.entity.EventPlaceSportsCategory;
-import com.crewmaker.entity.SportsCategory;
-import com.crewmaker.entity.User;
+import com.crewmaker.dto.EventDTO;
+import com.crewmaker.dto.EventPlaceDTO;
+import com.crewmaker.entity.*;
 import com.crewmaker.exception.ResourceNotFoundException;
-import com.crewmaker.repository.EventPlaceRepository;
-import com.crewmaker.repository.EventPlaceSportsCategoryRepository;
-import com.crewmaker.repository.SportsCategoryRepository;
-import com.crewmaker.repository.UserRepository;
+import com.crewmaker.repository.*;
 import com.crewmaker.reqbody.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
@@ -39,6 +35,8 @@ public class EventPlaceController {
     SportsCategoryRepository sportsCategoryRepository;
     @Autowired
     EventPlaceSportsCategoryRepository eventPlaceSportsCategoryRepository;
+    @Autowired
+    CyclePeriodRepository cyclePeriodRepository;
 
     @PostMapping("/newEventPlace")
     public ResponseEntity<?> addNewEventPlace(@RequestBody NewEventPlaceRequest newEventPlace) {
@@ -161,6 +159,15 @@ public class EventPlaceController {
         return ResponseEntity.created(location).body(new ApiResponse(true, "Event place archive status has been changed"));
     }
 
+    @GetMapping("/eventPlaces")
+    List<EventPlaceDTO> getEventPlaces() {
+        return eventPlaceRepository.findAll().stream().limit(20).map(eventPlace ->  new EventPlaceDTO(eventPlace)).collect(Collectors.toList());
+    }
+
+    @GetMapping("/cyclics")
+    List<CyclePeriod> getCyclics() {
+        return cyclePeriodRepository.findAll();
+    }
 }
 
 

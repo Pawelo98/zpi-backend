@@ -11,6 +11,11 @@ public class SportsCategoryDTO {
         this.sportsCategoryName = sportsCategory.getSportCategoryName();
     }
 
+    public SportsCategoryDTO(int sportsCategoryID, String sportsCategoryName) {
+        this.sportsCategoryID = sportsCategoryID;
+        this.sportsCategoryName = sportsCategoryName;
+    }
+
     public int getSportsCategoryID() {
         return sportsCategoryID;
     }

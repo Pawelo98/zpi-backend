@@ -7,7 +7,7 @@ import com.crewmaker.repository.UserOpinionRepository;
 import com.crewmaker.repository.UserRepository;
 import com.crewmaker.reqbody.ApiResponse;
 import com.crewmaker.reqbody.NewEventPlaceRequest;
-import com.crewmaker.reqbody.UserOpinionRequest;
+import com.crewmaker.reqbody.NewUserOpinionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 public class UserOpinionController {
     @Autowired
     private UserOpinionRepository userOpinionRepository;
+    @Autowired
     private UserRepository userRepository;
 
     @GetMapping("/useropinions")
@@ -45,15 +46,25 @@ public class UserOpinionController {
     }
 
     @PostMapping("/newUserOpinion")
-    public ResponseEntity<?> addNewUserOpinion(@RequestBody UserOpinionRequest userOpinionRequest) {
-        User author = userRepository.findByUsername(userOpinionRequest.getUserAuthor())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", userOpinionRequest.getUserAuthor()));
+    public ResponseEntity<?> addNewUserOpinion(@RequestBody NewUserOpinionRequest newUserOpinionRequest) {
+        System.out.println(newUserOpinionRequest.toString());
+        User author = userRepository.findByUsername(newUserOpinionRequest.getUserAuthor())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", newUserOpinionRequest.getUserAuthor()));
 
-        User about = userRepository.findByUsername(userOpinionRequest.getUserAbout())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", userOpinionRequest.getUserAuthor()));
+        User about = userRepository.findByUsername(newUserOpinionRequest.getUserAbout())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", newUserOpinionRequest.getUserAuthor()));
 
-        UserOpinion userOpinion = new UserOpinion(author, about, userOpinionRequest.getTitle(),
-                                        userOpinionRequest.getMessage(), userOpinionRequest.getGrade());
+        UserOpinion userOpinion = userOpinionRepository.findByUserAboutUsernameAndUserAuthorUsername(
+                                    newUserOpinionRequest.getUserAbout(), newUserOpinionRequest.getUserAuthor());
+
+        if(userOpinion == null) {
+            userOpinion = new UserOpinion(author, about, newUserOpinionRequest.getTitle(),
+                    newUserOpinionRequest.getMessage(), newUserOpinionRequest.getGrade());
+        } else {
+            userOpinion.setTitle(newUserOpinionRequest.getTitle());
+            userOpinion.setMessage(newUserOpinionRequest.getMessage());
+            userOpinion.setGrade(newUserOpinionRequest.getGrade());
+        }
 
         UserOpinion result = userOpinionRepository.save(userOpinion);
 

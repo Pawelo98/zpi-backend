@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @ToString
 @NoArgsConstructor
 
-public class UserOpinionRequest {
+public class NewUserOpinionRequest {
 
         private String userAuthor;
 

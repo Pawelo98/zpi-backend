@@ -57,6 +57,7 @@ public class UserOpinionController {
         UserOpinion userOpinion = userOpinionRepository.findByUserAboutUsernameAndUserAuthorUsername(
                                     newUserOpinionRequest.getUserAbout(), newUserOpinionRequest.getUserAuthor());
 
+        
         if(userOpinion == null) {
             userOpinion = new UserOpinion(author, about, newUserOpinionRequest.getTitle(),
                     newUserOpinionRequest.getMessage(), newUserOpinionRequest.getGrade());

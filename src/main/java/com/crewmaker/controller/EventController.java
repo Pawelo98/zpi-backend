@@ -46,18 +46,20 @@ public class EventController {
     }*/
     @GetMapping("/api/searchevents")
     List<EventDTO> searchEvents(@RequestParam(name = "categoryid") int categoryID,
-                                @RequestParam  @DateTimeFormat(pattern = "dd-MM-yyyy") Date eventDate){
+                                @RequestParam  @DateTimeFormat(pattern = "dd-MM-yyyy") Date eventDate,
+                                @RequestParam Time time){
 
         //System.out.println(eventDate.toString());
         /*return eventRepository.findAllBySportsCategorySportsCategoryId(categoryID)
                 .stream().limit(10).map(event -> new EventDTO(event)).collect(Collectors.toList());
 */
-        return eventRepository.findAllByDateAfterAndAndSportsCategorySportsCategoryIdOrderByDate(
+        /*return eventRepository.findAllByDateAfterAndAndSportsCategorySportsCategoryIdOrderByDate(
                 eventDate
                 ,categoryID)
-                .stream().limit(10).map(event ->  new EventDTO(event)).collect(Collectors.toList());
-        /*return eventRepository.findAllByDateAfterAndEventTimeAfterAndSportsCategorySportsCategoryIdOrderByDateAscEventTimeAsc(eventDate,eventTime,categoryID)
-                .stream().limit(10).map(e -> new EventDTO(e)).collect(Collectors.toList());*/
+                .stream().limit(10).map(event ->  new EventDTO(event)).collect(Collectors.toList());*/
+
+        return eventRepository.findAllByDateAfterAndEventTimeAfterAndSportsCategorySportsCategoryIdOrderByDateAscEventTimeAsc(eventDate,time,categoryID)
+                .stream().limit(10).map(e -> new EventDTO(e)).collect(Collectors.toList());
     }
 
     @GetMapping("/api/event")

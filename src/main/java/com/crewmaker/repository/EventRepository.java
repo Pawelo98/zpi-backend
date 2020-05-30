@@ -26,6 +26,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllByDateAfterAndEventTimeAfterAndSportsCategorySportsCategoryIdOrderByDateAscEventTimeAsc(
             Date eventDate, Time eventTime, int SportCategoryID
     );
+    List<Event> findAllByDateAfterAndEventTimeAfterAndSportsCategorySportsCategoryIdAndEventPlaceCityOrderByDateAscEventTimeAsc(Date eventDate,
+                                                                                                                                          Time eventTime, int SportCategoryID,
+                                                                                                                                          String eventPlaceCity);
 
     /*@Query("SELECT new com.crewmaker.model.UserProfile.UserProfileEvent(sc.sportCategoryName, e.date, e.eventTime, " +
             "ep.name, ep.city, ep.street, ep.streetNumber, " +

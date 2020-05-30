@@ -47,7 +47,8 @@ public class EventController {
     @GetMapping("/api/searchevents")
     List<EventDTO> searchEvents(@RequestParam(name = "categoryid") int categoryID,
                                 @RequestParam  @DateTimeFormat(pattern = "dd-MM-yyyy") Date eventDate,
-                                @RequestParam Time time){
+                                @RequestParam Time time,
+                                @RequestParam String eventCity){
 
         //System.out.println(eventDate.toString());
         /*return eventRepository.findAllBySportsCategorySportsCategoryId(categoryID)
@@ -57,9 +58,14 @@ public class EventController {
                 eventDate
                 ,categoryID)
                 .stream().limit(10).map(event ->  new EventDTO(event)).collect(Collectors.toList());*/
-
-        return eventRepository.findAllByDateAfterAndEventTimeAfterAndSportsCategorySportsCategoryIdOrderByDateAscEventTimeAsc(eventDate,time,categoryID)
-                .stream().limit(10).map(e -> new EventDTO(e)).collect(Collectors.toList());
+        if(eventCity.equals("")) {
+            return eventRepository.findAllByDateAfterAndEventTimeAfterAndSportsCategorySportsCategoryIdOrderByDateAscEventTimeAsc(eventDate, time, categoryID)
+                    .stream().limit(10).map(e -> new EventDTO(e)).collect(Collectors.toList());
+        }else {
+            return eventRepository.findAllByDateAfterAndEventTimeAfterAndSportsCategorySportsCategoryIdAndEventPlaceCityOrderByDateAscEventTimeAsc
+                    (eventDate, time, categoryID, eventCity)
+                    .stream().limit(10).map(e -> new EventDTO(e)).collect(Collectors.toList());
+        }
     }
 
     @GetMapping("/api/event")

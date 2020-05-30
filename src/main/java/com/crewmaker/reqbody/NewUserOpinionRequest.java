@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 
 public class NewUserOpinionRequest {
 
-        private String userAuthor;
+        private String opinionAuthorName;
 
         private String userAbout;
 

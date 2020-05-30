@@ -48,16 +48,16 @@ public class UserOpinionController {
     @PostMapping("/newUserOpinion")
     public ResponseEntity<?> addNewUserOpinion(@RequestBody NewUserOpinionRequest newUserOpinionRequest) {
         System.out.println(newUserOpinionRequest.toString());
-        User author = userRepository.findByUsername(newUserOpinionRequest.getUserAuthor())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", newUserOpinionRequest.getUserAuthor()));
+        User author = userRepository.findByUsername(newUserOpinionRequest.getOpinionAuthorName())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", newUserOpinionRequest.getOpinionAuthorName()));
 
         User about = userRepository.findByUsername(newUserOpinionRequest.getUserAbout())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", newUserOpinionRequest.getUserAuthor()));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", newUserOpinionRequest.getOpinionAuthorName()));
 
         UserOpinion userOpinion = userOpinionRepository.findByUserAboutUsernameAndUserAuthorUsername(
-                                    newUserOpinionRequest.getUserAbout(), newUserOpinionRequest.getUserAuthor());
+                                    newUserOpinionRequest.getUserAbout(), newUserOpinionRequest.getOpinionAuthorName());
 
-        
+
         if(userOpinion == null) {
             userOpinion = new UserOpinion(author, about, newUserOpinionRequest.getTitle(),
                     newUserOpinionRequest.getMessage(), newUserOpinionRequest.getGrade());

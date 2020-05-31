@@ -44,8 +44,11 @@ public class User {
     @Column(name="PhoneNumber")
     private String phoneNumber;
 
-    @Column(name="PhotoLink")
-    private String photoLink;
+    @OneToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name="ImageID")
+    @JsonIgnore
+    private UserProfileImage userProfileImage;
 
     @Column(name="Description")
     private String description;
@@ -88,6 +91,11 @@ public class User {
     @JsonIgnore
     private Set<Participation> userParticipations;
 
+    @OneToMany(mappedBy="userInitiator", cascade= {CascadeType.PERSIST,
+            CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonIgnore
+    private Set<Event> userEvents;
+
     public User(String username, String email, String password, String name, String surname, boolean archived, String phoneNumber,
                 boolean enabled, String photoLink, String description) {
         this.username = username;
@@ -98,7 +106,6 @@ public class User {
         this.archived = archived;
         this.phoneNumber = phoneNumber;
         this.enabled = enabled;
-        this.photoLink = photoLink;
         this.description = description;
     }
 

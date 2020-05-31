@@ -2,6 +2,7 @@ package com.crewmaker.repository;
 
 import com.crewmaker.entity.Event;
 import com.crewmaker.entity.User;
+import com.crewmaker.entity.UserProfileImage;
 import com.crewmaker.model.UserProfile.UserProfileUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -16,7 +17,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
 
-    @Query("SELECT new com.crewmaker.model.UserProfile.UserProfileUser(u.username, u.email, u.phoneNumber, u.photoLink, u.description) " +
+    @Query("SELECT new com.crewmaker.model.UserProfile.UserProfileUser(u.username, u.email, u.phoneNumber, u.description) " +
             "FROM User u where u.username = :username")
     UserProfileUser findByUsernameUserProfile(@Param("username") String username);
 
@@ -25,4 +26,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Boolean existsByEmail(String email);
 
     List<User> findDistinctByUserParticipationsId_IdEvent(Event event);
+
 }

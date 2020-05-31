@@ -1,6 +1,7 @@
 package com.crewmaker.model.UserProfile;
 
 import com.crewmaker.entity.Role;
+import com.crewmaker.entity.UserProfileImage;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,24 +17,22 @@ public class UserProfileUser {
     private String surname;
     private String email;
     private String phoneNumber;
-    private String photoLink;
     private String description;
 
-    public UserProfileUser(String username, String email, String phoneNumber, String photoLink, String description, String name, String surname) {
+
+    public UserProfileUser(String username, String email, String phoneNumber, String description, String name, String surname) {
         this.username = username;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.photoLink = photoLink;
         this.description = description;
         this.name = name;
         this.surname = surname;
     }
 
-    public UserProfileUser(String username, String email, String phoneNumber, String photoLink, String description) {
+    public UserProfileUser(String username, String email, String phoneNumber, String description) {
         this.username = username;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.photoLink = photoLink;
         this.description = description;
     }
 

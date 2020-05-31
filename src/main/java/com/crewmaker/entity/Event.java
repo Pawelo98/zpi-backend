@@ -41,6 +41,11 @@ public class Event {
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<Participation> eventParticipations;
 
+    @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name="userID")
+    private User userInitiator;
+
     @Column(name="eventName")
     private String name;
 
@@ -66,7 +71,7 @@ public class Event {
 
     public Event(CyclePeriod cyclePeriod, EventStatus eventStatus, EventPlace eventPlace, SportsCategory sportsCategory,
                  String name, String description, Date date, int maxPlayers, boolean isCyclic, Time eventTime,
-                 Time eventDuration) {
+                 Time eventDuration, User userInitiator) {
         this.cyclePeriod = cyclePeriod;
         this.eventStatus = eventStatus;
         this.eventPlace = eventPlace;
@@ -78,6 +83,7 @@ public class Event {
         this.isCyclic = isCyclic;
         this.eventTime = eventTime;
         this.eventDuration = eventDuration;
+        this.userInitiator = userInitiator;
     }
 
     public Event() {}

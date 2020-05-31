@@ -164,6 +164,12 @@ public class EventPlaceController {
         return eventPlaceRepository.findTop20ByIsAcceptedIsTrue().stream().limit(20).map(eventPlace ->  new EventPlaceDTO(eventPlace)).collect(Collectors.toList());
     }
 
+    @GetMapping("/eventPlacesByCategoryAndCity")
+    List<EventPlaceDTO> getEventPlacesBySportCategoryCity(@RequestParam int sportCategoryId,
+                                                          @RequestParam String eventCity) {
+        return eventPlaceRepository.findEventPlaceByCityAndSportCategory(sportCategoryId, eventCity).stream().collect(Collectors.toList());
+    }
+
     @GetMapping("/cyclics")
     List<CyclePeriod> getCyclics() {
         return cyclePeriodRepository.findAll();

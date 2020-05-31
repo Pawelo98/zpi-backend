@@ -19,6 +19,15 @@ public class EventPlaceDTO {
         this.streetNumber = eventPlace.getStreetNumber();
     }
 
+    public EventPlaceDTO(int eventPlaceId, String name, String city, String postCode, String street, String streetNumber) {
+        this.eventPlaceId = eventPlaceId;
+        this.name = name;
+        this.city = city;
+        this.postCode = postCode;
+        this.street = street;
+        this.streetNumber = streetNumber;
+    }
+
     public int getEventPlaceId() {
         return eventPlaceId;
     }

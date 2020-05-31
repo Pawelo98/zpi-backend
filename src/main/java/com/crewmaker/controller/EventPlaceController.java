@@ -161,7 +161,7 @@ public class EventPlaceController {
 
     @GetMapping("/eventPlaces")
     List<EventPlaceDTO> getEventPlaces() {
-        return eventPlaceRepository.findAll().stream().limit(20).map(eventPlace ->  new EventPlaceDTO(eventPlace)).collect(Collectors.toList());
+        return eventPlaceRepository.findTop20ByIsAcceptedIsTrue().stream().limit(20).map(eventPlace ->  new EventPlaceDTO(eventPlace)).collect(Collectors.toList());
     }
 
     @GetMapping("/cyclics")

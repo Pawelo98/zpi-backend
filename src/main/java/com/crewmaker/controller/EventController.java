@@ -37,6 +37,8 @@ public class EventController {
     private EventPlaceRepository eventPlaceRepository;
     @Autowired
     private SportsCategoryRepository sportsCategoryRepository;
+    @Autowired
+    private ParticipationRepository participationRepository;
 
     //baeldung requestparams zeby parametryzowac tutaj jaki event i przeslac sobie id sportscategory a nie string.
    /* @GetMapping("/api/searchevents")
@@ -108,6 +110,9 @@ public class EventController {
                 newEvent.getEventTime(), newEvent.getEventDuration(), user);
 
         Event result = eventRepository.save(event);
+
+        event.addParticipator(user, event, 0);
+        eventRepository.save(event);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/users/{username}")

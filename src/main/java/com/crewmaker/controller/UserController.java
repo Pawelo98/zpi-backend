@@ -12,6 +12,7 @@ import com.crewmaker.repository.UserRepository;
 import com.crewmaker.reqbody.ApiResponse;
 import com.crewmaker.reqbody.ImageResponse;
 import com.crewmaker.reqbody.UserUpdateRequest;
+import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 @Controller
 @CrossOrigin
@@ -32,12 +38,10 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class UserController {
 
-
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     UserRepository userRepository;
-
 
     @GetMapping("/user/me")
     @PreAuthorize("hasRole('USER')")
@@ -54,16 +58,6 @@ public class UserController {
         UserProfileUser userProfile = new UserProfileUser(user.getUsername(), user.getEmail(), user.getPhoneNumber(), user.getDescription(), user.getName(), user.getSurname());
 
         return userProfile;
-    }
-
-    @GetMapping("/usersProfileImage/{username}")
-    public ResponseEntity<ImageResponse> getUserProfileImage(@PathVariable(value = "username") String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-
-        return Optional.ofNullable(user.getUserProfileImage()).map(retrivedImage -> ResponseEntity
-                .ok()
-                .body(new ImageResponse(retrivedImage.getBinaryData(),retrivedImage.getName()))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/updateUser")
@@ -97,4 +91,5 @@ public class UserController {
         Boolean isAvailable = !userRepository.existsByEmail(email);
         return new AvailabilityConfirmation(isAvailable);
     }
+
 }

@@ -1,9 +1,6 @@
 package com.crewmaker.entity;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -23,8 +20,16 @@ public class UserProfileImage {
     @Column(name="Name")
     private String name;
 
+    @Column(name="Type")
+    private String type;
+
     @Lob
     @Column(name="BinaryData")
     private byte[] binaryData;
 
+    public UserProfileImage(String originalFilename, String contentType, byte[] compressBytes) {
+        this.name = originalFilename;
+        this.type = contentType;
+        this.binaryData = compressBytes;
+    }
 }

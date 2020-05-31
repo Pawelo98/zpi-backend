@@ -28,7 +28,9 @@ public class ParticipationContoller {
     @Autowired
     EventRepository eventRepository;
     @Autowired
+
     UserRepository userRepository;
+
     @Autowired
     ParticipationRepository participationRepository;
 

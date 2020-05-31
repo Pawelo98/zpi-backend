@@ -1,12 +1,15 @@
 package com.crewmaker.repository;
 
 import com.crewmaker.entity.Event;
+import com.crewmaker.entity.EventPlace;
 import com.crewmaker.entity.Participation;
 import com.crewmaker.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +29,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllByDateAfterAndEventTimeAfterAndSportsCategorySportsCategoryIdOrderByDateAscEventTimeAsc(
             Date eventDate, Time eventTime, int SportCategoryID
     );
-
+    int countAllByEventPlace(EventPlace eventPlace);
+    int countAllByEventPlaceAndDateAfter(EventPlace eventPlace, Date date);
+    int countAllByEventPlaceAndDateBefore(EventPlace eventPlace, Date date);
     /*@Query("SELECT new com.crewmaker.model.UserProfile.UserProfileEvent(sc.sportCategoryName, e.date, e.eventTime, " +
             "ep.name, ep.city, ep.street, ep.streetNumber, " +
             "(SELECT Count(p2.id.event) FROM Participation p2 WHERE p2.id.event = e.eventId), e.maxPlayers) " +

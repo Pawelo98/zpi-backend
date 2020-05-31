@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -29,6 +32,8 @@ public class EventPlaceController {
 
     @Autowired
     EventPlaceRepository eventPlaceRepository;
+    @Autowired
+    EventRepository eventRepository;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -157,6 +162,23 @@ public class EventPlaceController {
                 .buildAndExpand(eventPlace.getEventPlaceId()).toUri();
 
         return ResponseEntity.created(location).body(new ApiResponse(true, "Event place archive status has been changed"));
+    }
+
+
+    @GetMapping("/countEventPlaceEvents")
+    ResponseEntity<?> getEventPlaceEventsCount(@RequestParam(required = true, name = "eventPlaceID") int eventPlaceID ){
+        EventPlace eventPlace = eventPlaceRepository.findById(eventPlaceID)
+                .orElseThrow(() -> new ResourceNotFoundException("EventPlace", "eventPlaceId", eventPlaceID));
+
+       int calculate = eventRepository.countAllByEventPlace(eventPlace);
+       int calculateBefore = eventRepository.countAllByEventPlaceAndDateBefore(eventPlace, new Date());
+       int calculateAfter = eventRepository.countAllByEventPlaceAndDateAfter (eventPlace, new Date());
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/eventPlace/{eventPlaceId}")
+                .buildAndExpand(eventPlace.getEventPlaceId()).toUri();
+
+        return ResponseEntity.ok().body(new EventPlaceStatisticsResponse(calculate, calculateBefore, calculateAfter));
     }
 
     @GetMapping("/eventPlaces")

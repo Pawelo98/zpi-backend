@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 public class UserOpinionController {
     @Autowired
     private UserOpinionRepository userOpinionRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @GetMapping("/useropinions")

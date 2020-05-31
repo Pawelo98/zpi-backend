@@ -104,11 +104,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers("/api/acceptEventPlace")
                 .permitAll()
+                .antMatchers("/api/countEventPlaceEvents")
+                .permitAll()
                 .antMatchers("/api/eventParticipants")
                 .permitAll()
                 .antMatchers("/api/usersProfileImage/*")
                 .permitAll()
+                .antMatchers("/api/usersProfileImageSmall/*")
+                .permitAll()
                 .antMatchers("/api/leaveevent")
+                .permitAll()
+                .antMatchers("/api/uploadPhoto/")
                 .permitAll()
                 .antMatchers("/api/useropinions")
                 .permitAll()
@@ -120,7 +126,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .fullyAuthenticated();
             //.httpBasic()
                 //.disable();
-
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         //http
             //.addFilter(new JWTAuthenticationFilter(authenticationManager()))

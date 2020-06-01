@@ -25,6 +25,8 @@ public class EventDTO {
     private String eventSportName;
     private Time eventDuration;
     private int eventPlaceID;
+    private String userInitiator;
+    private String eventStatus;
 
     public EventDTO(Event event){
         eventID = event.getEventId();
@@ -48,6 +50,8 @@ public class EventDTO {
         eventSportName = event.getSportsCategory().getSportCategoryName();
         eventPlaceStreetNumber = event.getEventPlace().getStreetNumber();
         eventDuration = event.getEventDuration();
+        userInitiator = event.getUserInitiator().getUsername();
+        eventStatus = event.getEventStatus().getStatusName();
     }
 
     public String getEventDescription() {
@@ -192,5 +196,21 @@ public class EventDTO {
 
     public void setEventPlaceID(int eventPlaceID) {
         this.eventPlaceID = eventPlaceID;
+    }
+
+    public String getUserInitiator() {
+        return userInitiator;
+    }
+
+    public void setUserInitiator(String userInitiator) {
+        this.userInitiator = userInitiator;
+    }
+
+    public String getEventStatus() {
+        return eventStatus;
+    }
+
+    public void setEventStatus(String eventStatus) {
+        this.eventStatus = eventStatus;
     }
 }

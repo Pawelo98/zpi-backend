@@ -194,6 +194,14 @@ public class Event {
         this.eventParticipations = eventParticipations;
     }
 
+    public User getUserInitiator() {
+        return userInitiator;
+    }
+
+    public void setUserInitiator(User userInitiator) {
+        this.userInitiator = userInitiator;
+    }
+
     public void addParticipator(User user, Event event, Integer queuePosition) {
         if (eventParticipations == null) {
             eventParticipations = new HashSet<>();

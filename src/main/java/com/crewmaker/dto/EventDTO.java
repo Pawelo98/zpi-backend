@@ -23,6 +23,7 @@ public class EventDTO {
     private String eventPlacePostCode;
     private String eventPlaceCity;
     private String eventSportName;
+    private int eventSportID;
     private Time eventDuration;
     private int eventPlaceID;
     private String userInitiator;
@@ -48,6 +49,7 @@ public class EventDTO {
         eventPlaceCity = event.getEventPlace().getCity();
         maxPlayers = event.getMaxPlayers();
         eventSportName = event.getSportsCategory().getSportCategoryName();
+        eventSportID = event.getSportsCategory().getSportsCategoryId();
         eventPlaceStreetNumber = event.getEventPlace().getStreetNumber();
         eventDuration = event.getEventDuration();
         userInitiator = event.getUserInitiator().getUsername();
@@ -164,6 +166,14 @@ public class EventDTO {
 
     public void setEventSportName(String eventSportName) {
         this.eventSportName = eventSportName;
+    }
+
+    public int getEventSportID() {
+        return eventSportID;
+    }
+
+    public void setEventSportID(int eventSportID) {
+        this.eventSportID = eventSportID;
     }
 
     public Time getEventTime() {

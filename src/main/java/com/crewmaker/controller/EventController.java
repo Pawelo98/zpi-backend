@@ -120,4 +120,18 @@ public class EventController {
 
         return ResponseEntity.created(location).body(new ApiResponse(true, "New event added successfully"));
     }
+
+    @PostMapping("api/cancelEvent/{eventID}")
+    public ResponseEntity<?> cancelEvent(@PathVariable(value = "eventID") int eventID) {
+        Event event = eventRepository.findByEventId(eventID);
+        event.setEventStatus(eventStatusRepository.findByEventStatusId(2));
+
+        Event result = eventRepository.save(event);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/users/{username}")
+                .buildAndExpand(result.getEventId()).toUri();
+
+        return ResponseEntity.created(location).body(new ApiResponse(true, "Event canceled successfully"));
+    }
 }

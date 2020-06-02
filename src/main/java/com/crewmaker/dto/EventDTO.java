@@ -28,6 +28,7 @@ public class EventDTO {
     private int eventPlaceID;
     private String userInitiator;
     private String eventStatus;
+    private int cycleId;
 
     public EventDTO(Event event){
         eventID = event.getEventId();
@@ -39,6 +40,7 @@ public class EventDTO {
         if(isCyclic) {
             cycleType = event.getCyclePeriod().getCycleType();
             cycleLength = event.getCyclePeriod().getCycleLength();
+            cycleId = event.getCyclePeriod().getCyclePeriodId();
         }
         eventPlaceDescription = event.getEventPlace().getDescription();
         eventPlacePostCode = event.getEventPlace().getPostCode();
@@ -222,5 +224,13 @@ public class EventDTO {
 
     public void setEventStatus(String eventStatus) {
         this.eventStatus = eventStatus;
+    }
+
+    public int getCycleId() {
+        return cycleId;
+    }
+
+    public void setCycleId(int cycleId) {
+        this.cycleId = cycleId;
     }
 }

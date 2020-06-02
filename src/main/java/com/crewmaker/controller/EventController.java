@@ -5,6 +5,7 @@ import com.crewmaker.entity.*;
 import com.crewmaker.exception.ResourceNotFoundException;
 import com.crewmaker.repository.*;
 import com.crewmaker.reqbody.ApiResponse;
+import com.crewmaker.reqbody.EventUpdateRequest;
 import com.crewmaker.reqbody.NewEventPlaceRequest;
 import com.crewmaker.reqbody.NewEventRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,6 +106,8 @@ public class EventController {
         EventPlace eventPlace = eventPlaceRepository.findByEventPlaceId(newEvent.getEventPlaceId());
         SportsCategory sportsCategory = sportsCategoryRepository.findBySportsCategoryId(newEvent.getSportCategoryId());
 
+        System.out.println(newEvent.isCyclic());
+
         Event event = new Event(cyclePeriod, eventStatus, eventPlace, sportsCategory, newEvent.getEventName(),
                 newEvent.getEventDescription(), newEvent.getEventDate(), newEvent.getMaxPlayers(), newEvent.isCyclic(),
                 newEvent.getEventTime(), newEvent.getEventDuration(), user);
@@ -113,6 +116,31 @@ public class EventController {
 
         event.addParticipator(user, event, 0);
         eventRepository.save(event);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/users/{username}")
+                .buildAndExpand(result.getEventId()).toUri();
+
+        return ResponseEntity.created(location).body(new ApiResponse(true, "New event added successfully"));
+    }
+
+    @PostMapping("api/updateEvent")
+    public ResponseEntity<?> updateEvent(@RequestBody EventUpdateRequest eventUpdate) {
+        Event event = eventRepository.findByEventId(eventUpdate.getEventID());
+
+        event.setCyclePeriod(cyclePeriodRepository.findByCyclePeriodId(eventUpdate.getCycleId()));
+        event.setEventPlace(eventPlaceRepository.findByEventPlaceId(eventUpdate.getEventPlaceId()));
+        event.setSportsCategory(sportsCategoryRepository.findBySportsCategoryId(eventUpdate.getSportCategoryId()));
+
+        event.setName(eventUpdate.getEventName());
+        event.setDescription(eventUpdate.getEventDescription());
+        event.setDate(eventUpdate.getEventDate());
+        event.setEventTime(eventUpdate.getEventTime());
+        event.setMaxPlayers(eventUpdate.getMaxPlayers());
+        event.setCyclic(eventUpdate.isCyclic());
+        event.setEventDuration(eventUpdate.getEventDuration());
+
+        Event result = eventRepository.save(event);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/users/{username}")

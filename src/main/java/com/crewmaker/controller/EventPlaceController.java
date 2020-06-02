@@ -64,6 +64,8 @@ public class EventPlaceController {
         return ResponseEntity.created(location).body(new ApiResponse(true, "New event place added to verification successfully"));
     }
 
+
+
     @GetMapping("/getEventPlace")
     Page<EventPlaceResponse> searchEvents(@RequestParam(required = true, defaultValue = "0", name = "activePage") int activePage,
                                           @RequestParam(required = true, defaultValue = "10" , name = "size") int size,
@@ -162,6 +164,11 @@ public class EventPlaceController {
     @GetMapping("/eventPlaces")
     List<EventPlaceDTO> getEventPlaces() {
         return eventPlaceRepository.findTop20ByIsAcceptedIsTrue().stream().limit(20).map(eventPlace ->  new EventPlaceDTO(eventPlace)).collect(Collectors.toList());
+    }
+
+    @GetMapping("/eventPlace")
+    EventPlaceDTO getEventPlace(@RequestParam int eventPlaceID) {
+        return new EventPlaceDTO(eventPlaceRepository.findByEventPlaceId(eventPlaceID));
     }
 
     @GetMapping("/eventPlacesByCategoryAndCity")

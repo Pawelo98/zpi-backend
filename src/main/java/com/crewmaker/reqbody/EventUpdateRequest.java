@@ -16,7 +16,7 @@ import java.util.Date;
 public class EventUpdateRequest {
 
     @NotBlank
-    private int eventID;
+    private int eventId;
 
     private int cycleId;
 

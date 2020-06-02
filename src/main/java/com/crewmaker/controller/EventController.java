@@ -106,10 +106,12 @@ public class EventController {
         EventPlace eventPlace = eventPlaceRepository.findByEventPlaceId(newEvent.getEventPlaceId());
         SportsCategory sportsCategory = sportsCategoryRepository.findBySportsCategoryId(newEvent.getSportCategoryId());
 
-        System.out.println(newEvent.isCyclic());
+        boolean isCyclic = false;
+        if(cyclePeriod != null)
+            isCyclic = true;
 
         Event event = new Event(cyclePeriod, eventStatus, eventPlace, sportsCategory, newEvent.getEventName(),
-                newEvent.getEventDescription(), newEvent.getEventDate(), newEvent.getMaxPlayers(), newEvent.isCyclic(),
+                newEvent.getEventDescription(), newEvent.getEventDate(), newEvent.getMaxPlayers(), isCyclic,
                 newEvent.getEventTime(), newEvent.getEventDuration(), user);
 
         Event result = eventRepository.save(event);
@@ -126,10 +128,17 @@ public class EventController {
 
     @PostMapping("api/updateEvent")
     public ResponseEntity<?> updateEvent(@RequestBody EventUpdateRequest eventUpdate) {
-        Event event = eventRepository.findByEventId(eventUpdate.getEventID());
+        int eventId = eventUpdate.getEventId();
+        Event event = eventRepository.findByEventId(eventId);
 
-        event.setCyclePeriod(cyclePeriodRepository.findByCyclePeriodId(eventUpdate.getCycleId()));
-        event.setEventPlace(eventPlaceRepository.findByEventPlaceId(eventUpdate.getEventPlaceId()));
+        int cycleId = eventUpdate.getCycleId();
+        CyclePeriod cyclePeriod = cyclePeriodRepository.findByCyclePeriodId(cycleId);
+        event.setCyclePeriod(cyclePeriod);
+
+        int eventPlaceId = eventUpdate.getEventPlaceId();
+        EventPlace eventPlace = eventPlaceRepository.findByEventPlaceId(eventPlaceId);
+        event.setEventPlace(eventPlace);
+
         event.setSportsCategory(sportsCategoryRepository.findBySportsCategoryId(eventUpdate.getSportCategoryId()));
 
         event.setName(eventUpdate.getEventName());

@@ -33,6 +33,6 @@ public interface EventPlaceRepository extends JpaRepository<EventPlace, Integer>
             "ep.postCode, ep.street, ep.streetNumber) " +
             "FROM EventPlace ep " +
             "JOIN ep.eventPlaceSportsCategories epsc " +
-            "WHERE ep.city = :eventCity AND epsc.id.sportsCategory.sportsCategoryId = :sportCategoryId")
+            "WHERE ep.city = :eventCity AND epsc.id.sportsCategory.sportsCategoryId = :sportCategoryId AND ep.isArchived = 0")
     List<EventPlaceDTO> findEventPlaceByCityAndSportCategory(@Param("sportCategoryId") int sportCategoryId, @Param("eventCity") String eventCity);
 }

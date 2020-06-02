@@ -43,8 +43,11 @@ public class EventPlace {
     @Column(name="eventPlaceStreetNumber")
     private String streetNumber;
 
-    @Column(name="photoLink")
-    private String photoLink;
+    @OneToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name="photoLink")
+    @JsonIgnore
+    private EventPlaceImage photoLink;
 
     @Column(name="isAccepted")
     private Boolean isAccepted;
@@ -93,7 +96,7 @@ public class EventPlace {
     private Set<Event> eventPlaceEvents;
 
     public EventPlace(User userRequesting, String name, String description, String city,
-                      String postCode, String street, String streetNumber, String photoLink) {
+                      String postCode, String street, String streetNumber, EventPlaceImage photoLink) {
         this.userRequesting = userRequesting;
         this.name = name;
         this.description = description;
@@ -187,11 +190,11 @@ public class EventPlace {
         this.streetNumber = streetNumber;
     }
 
-    public String getPhotoLink() {
+    public EventPlaceImage getPhotoLink() {
         return photoLink;
     }
 
-    public void setPhotoLink(String photoLink) {
+    public void setPhotoLink(EventPlaceImage photoLink) {
         this.photoLink = photoLink;
     }
 

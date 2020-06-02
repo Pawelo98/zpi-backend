@@ -1,7 +1,6 @@
 package com.crewmaker.controller;
 
 import com.crewmaker.dto.EventPlaceOpinionDTO;
-import com.crewmaker.entity.Event;
 import com.crewmaker.entity.EventPlace;
 import com.crewmaker.entity.EventPlaceOpinion;
 import com.crewmaker.entity.User;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -37,15 +37,27 @@ public class EventPlaceOpinionController {
     @Autowired
     EventPlaceRepository eventPlaceRepository;
 
-    @PostMapping("/addeventplaceopinion")
+    @PostMapping("/addEventPlaceOpinion")
     public ResponseEntity<?> registerOpinion (@Valid @RequestBody EventPlaceOpinionRequest request){
+
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
-        EventPlace eventPlace = eventPlaceRepository.findByEventPlaceId(request.getEventID());
+        EventPlace eventPlace = Optional.ofNullable(eventPlaceRepository.findByEventPlaceId(request.getEventPlaceAbout()))
+                .orElseThrow(() -> new ResourceNotFoundException("EventPlace", "eventPlaceId", request.getEventPlaceAbout()));
 
-        EventPlaceOpinion eventPlaceOpinion = new EventPlaceOpinion(eventPlace,user,request.getTitle(),request.getMessage(),request.getGrade());
+        EventPlaceOpinion eventPlaceOpinion = eventPlaceOpinionRepository.findByEventPlaceAndUserAuthor(
+                eventPlace, user);
+
+        if(eventPlaceOpinion == null) {
+            eventPlaceOpinion = new EventPlaceOpinion(eventPlace,user,request.getTitle(),request.getMessage(),request.getGrade());
+        } else {
+            eventPlaceOpinion.setTitle(request.getTitle());
+            eventPlaceOpinion.setMessage(request.getMessage());
+            eventPlaceOpinion.setGrade(request.getGrade());
+        }
+
 
         eventPlaceOpinionRepository.save(eventPlaceOpinion);
 
@@ -53,8 +65,21 @@ public class EventPlaceOpinionController {
                 .body(new ApiResponse(true, "Opinion added"));
     }
 
-    @GetMapping("/geteventplaceopinions")
-    public List<EventPlaceOpinionDTO> getEventPlaceOpinions (@RequestParam int eventplaceID){
-        return eventPlaceOpinionRepository.findAllByEventPlaceEventPlaceId(eventplaceID).stream().map(el -> new EventPlaceOpinionDTO(el)).collect(Collectors.toList());
+    @GetMapping("/eventOpinion")
+    public EventPlaceOpinionDTO getUserOpinion(@RequestParam int eventPlaceID, @RequestParam String currentUser){
+
+        EventPlace eventPlace = eventPlaceRepository.findByEventPlaceId(eventPlaceID);
+
+        EventPlaceOpinion opinion = eventPlaceOpinionRepository.findByEventPlaceAndUserAuthorUsername(eventPlace, currentUser);
+        if(opinion != null) {
+            return new EventPlaceOpinionDTO(opinion);
+        } else {
+            return null;
+        }
+    }
+
+    @GetMapping("/getEventPlaceOpinions")
+    public List<EventPlaceOpinionDTO> getEventPlaceOpinions (@RequestParam int eventPlaceID){
+        return eventPlaceOpinionRepository.findAllByEventPlaceEventPlaceId(eventPlaceID).stream().map(el -> new EventPlaceOpinionDTO(el)).collect(Collectors.toList());
     }
 }

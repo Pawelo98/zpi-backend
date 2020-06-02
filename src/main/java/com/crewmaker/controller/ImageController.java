@@ -1,9 +1,13 @@
 package com.crewmaker.controller;
 
+import com.crewmaker.entity.EventPlace;
+import com.crewmaker.entity.EventPlaceImage;
 import com.crewmaker.entity.User;
 import com.crewmaker.entity.UserProfileImage;
 import com.crewmaker.exception.AppException;
 import com.crewmaker.exception.ResourceNotFoundException;
+import com.crewmaker.repository.EventPlaceImageRepository;
+import com.crewmaker.repository.EventPlaceRepository;
 import com.crewmaker.repository.UserProfileImageRepository;
 import com.crewmaker.repository.UserRepository;
 import com.crewmaker.reqbody.ApiResponse;
@@ -38,6 +42,24 @@ public class ImageController {
     @Autowired
     UserProfileImageRepository userProfileImageRepository;
 
+    @Autowired
+    EventPlaceRepository eventPlaceRepository;
+
+    @Autowired
+    EventPlaceImageRepository eventPlaceImageRepository;
+
+    @GetMapping("/eventPlaceImage/{eventPlaceID}")
+    public ResponseEntity<ImageResponse> getEventPlaceImage(@PathVariable(value = "eventPlaceID") int eventPlaceID) {
+
+        EventPlace eventPlace = Optional.ofNullable(eventPlaceRepository.findByEventPlaceId(eventPlaceID))
+                .orElseThrow(() -> new ResourceNotFoundException("EventPlace", "eventPlace", eventPlaceID));
+
+
+        return Optional.ofNullable(eventPlace.getPhotoLink()).map(retrivedImage -> ResponseEntity
+                .ok()
+                .body(new ImageResponse(scale(decompressBytes(retrivedImage.getBinaryData()),256,256),retrivedImage.getName()))).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/usersProfileImage/{username}")
     public ResponseEntity<ImageResponse> getUserProfileImage(@PathVariable(value = "username") String username) {
         User user = userRepository.findByUsername(username)
@@ -56,6 +78,28 @@ public class ImageController {
         return Optional.ofNullable(user.getUserProfileImage()).map(retrivedImage -> ResponseEntity
                 .ok()
                 .body(new ImageResponse(scale(decompressBytes(retrivedImage.getBinaryData()),100,100),retrivedImage.getName()))).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @Transactional
+    @PostMapping("/uploadPhotoEventPlace/{eventPlaceID}")
+    public ResponseEntity<?> uploadPhotoEventPlace(@RequestParam("file") MultipartFile file, @PathVariable(value = "eventPlaceID") int eventPlaceID) throws IOException {
+
+        EventPlace eventPlace = Optional.ofNullable(eventPlaceRepository.findByEventPlaceId(eventPlaceID))
+                .orElseThrow(() -> new ResourceNotFoundException("EventPlace", "eventPlace", eventPlaceID));
+
+       EventPlaceImage newImg = new EventPlaceImage(file.getOriginalFilename(), file.getContentType(),
+                compressBytes(file.getBytes()));
+
+        Optional<EventPlaceImage> currentImg = Optional.ofNullable(eventPlace.getPhotoLink());
+        if(currentImg.isPresent()){
+            eventPlaceImageRepository.setEventPlaceImageById(file.getOriginalFilename(), file.getContentType(),
+                    compressBytes(file.getBytes()), currentImg.get().getEventPlaceImageID());
+        }else{
+            eventPlace.setPhotoLink(newImg);
+            eventPlaceRepository.save(eventPlace);
+        }
+
+        return ResponseEntity.ok(new ApiResponse(true, "Image uploaded successfully"));
     }
 
     @Transactional

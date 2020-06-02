@@ -7,6 +7,7 @@ import com.crewmaker.entity.*;
 import com.crewmaker.exception.ResourceNotFoundException;
 import com.crewmaker.repository.*;
 import com.crewmaker.reqbody.*;
+import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -25,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.zip.Deflater;
 
 @RestController
 @RequestMapping("/api")
@@ -49,8 +52,20 @@ public class EventPlaceController {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
+        EventPlaceImage newImg = null;
+
+        if(newEventPlace.getEventPlaceImage() != null){
+            String prefixType = newEventPlace.getEventPlaceImage().split(";")[0];
+            String type = prefixType.split(":")[1];
+            String base64Image = newEventPlace.getEventPlaceImage().split(",")[1];
+            byte[] imageBytes = javax.xml.bind.DatatypeConverter.parseBase64Binary(base64Image);
+            newImg = new EventPlaceImage("newEventPlaceImage", type,
+                    compressBytes(imageBytes));
+        }
+
+
         EventPlace eventPlace = new EventPlace(user, newEventPlace.getEventPlaceName(), newEventPlace.getEventPlaceDescription(), newEventPlace.getEventPlaceCity(),
-                newEventPlace.getEventPlacePostalCode(), newEventPlace.getEventPlaceStreet(), newEventPlace.getEventPlaceStreetNumber(), null);
+                newEventPlace.getEventPlacePostalCode(), newEventPlace.getEventPlaceStreet(), newEventPlace.getEventPlaceStreetNumber(), newImg);
 
         EventPlace result = eventPlaceRepository.save(eventPlace);
 
@@ -73,44 +88,82 @@ public class EventPlaceController {
     Page<EventPlaceResponse> searchEvents(@RequestParam(required = true, defaultValue = "0", name = "activePage") int activePage,
                                           @RequestParam(required = true, defaultValue = "10" , name = "size") int size,
                                           @RequestParam(required = true, defaultValue = "ALL" , name = "filtering") String filtering,
-                                          @RequestParam(required = true, defaultValue = "10" , name = "sorting") String sorting){
+                                          @RequestParam(required = true, defaultValue = "10" , name = "sorting") String sorting,
+                                          @RequestParam(name = "city") String city){
 
         String[] filters = sorting.split("\\_");
         Page<EventPlace> page;
 
-        switch(filtering){
-            case "ALL": {
-                page = eventPlaceRepository.findAll(
-                        PageRequest.of(activePage - 1, size, Sort.by(Sort.Direction.valueOf(filters[0]), filters[1])));
-                break;
-            }
-            case "ACC": {
-                page = eventPlaceRepository.findAllByIsAcceptedIsTrue(
-                        PageRequest.of(activePage - 1, size, Sort.by(Sort.Direction.valueOf(filters[0]), filters[1])));
-                break;
-            }
-            case "NOTACC": {
-                page = eventPlaceRepository.findAllByIsAcceptedIsFalse(
-                        PageRequest.of(activePage - 1, size, Sort.by(Sort.Direction.valueOf(filters[0]), filters[1])));
-                break;
-            }
-            case "ARCH": {
-                page = eventPlaceRepository.findAllByIsArchivedIsTrue(
-                        PageRequest.of(activePage - 1, size, Sort.by(Sort.Direction.valueOf(filters[0]), filters[1])));
-                break;
-            }
-            case "NOTARCH": {
-                page = eventPlaceRepository.findAllByIsArchivedIsFalse(
-                        PageRequest.of(activePage - 1, size, Sort.by(Sort.Direction.valueOf(filters[0]), filters[1])));
-                break;
-            }
+        if(city.equals("")) {
+            switch(filtering){
+                case "ALL": {
+                    page = eventPlaceRepository.findAll(
+                            PageRequest.of(activePage - 1, size, Sort.by(Sort.Direction.valueOf(filters[0]), filters[1])));
+                    break;
+                }
+                case "ACC": {
+                    page = eventPlaceRepository.findAllByIsAcceptedIsTrue(
+                            PageRequest.of(activePage - 1, size, Sort.by(Sort.Direction.valueOf(filters[0]), filters[1])));
+                    break;
+                }
+                case "NOTACC": {
+                    page = eventPlaceRepository.findAllByIsAcceptedIsFalse(
+                            PageRequest.of(activePage - 1, size, Sort.by(Sort.Direction.valueOf(filters[0]), filters[1])));
+                    break;
+                }
+                case "ARCH": {
+                    page = eventPlaceRepository.findAllByIsArchivedIsTrue(
+                            PageRequest.of(activePage - 1, size, Sort.by(Sort.Direction.valueOf(filters[0]), filters[1])));
+                    break;
+                }
+                case "NOTARCH": {
+                    page = eventPlaceRepository.findAllByIsArchivedIsFalse(
+                            PageRequest.of(activePage - 1, size, Sort.by(Sort.Direction.valueOf(filters[0]), filters[1])));
+                    break;
+                }
 
-            default: {
-                page = eventPlaceRepository.findAll(
-                        PageRequest.of(activePage-1, size, Sort.by(Sort.Direction.ASC, "eventPlaceId")));
-                break;
+                default: {
+                    page = eventPlaceRepository.findAll(
+                            PageRequest.of(activePage-1, size, Sort.by(Sort.Direction.ASC, "eventPlaceId")));
+                    break;
+                }
+            }
+        }else {
+            switch(filtering){
+                case "ALL": {
+                    page = eventPlaceRepository.findAllByCityIgnoreCaseContaining(city,
+                            PageRequest.of(activePage - 1, size, Sort.by(Sort.Direction.valueOf(filters[0]), filters[1])));
+                    break;
+                }
+                case "ACC": {
+                    page = eventPlaceRepository.findAllByIsAcceptedIsTrueAndCityIgnoreCaseContaining(city,
+                            PageRequest.of(activePage - 1, size, Sort.by(Sort.Direction.valueOf(filters[0]), filters[1])));
+                    break;
+                }
+                case "NOTACC": {
+                    page = eventPlaceRepository.findAllByIsAcceptedIsFalseAndCityIgnoreCaseContaining(city,
+                            PageRequest.of(activePage - 1, size, Sort.by(Sort.Direction.valueOf(filters[0]), filters[1])));
+                    break;
+                }
+                case "ARCH": {
+                    page = eventPlaceRepository.findAllByIsArchivedIsTrueAndCityIgnoreCaseContaining(city,
+                            PageRequest.of(activePage - 1, size, Sort.by(Sort.Direction.valueOf(filters[0]), filters[1])));
+                    break;
+                }
+                case "NOTARCH": {
+                    page = eventPlaceRepository.findAllByIsArchivedIsFalseAndCityIgnoreCaseContaining(city,
+                            PageRequest.of(activePage - 1, size, Sort.by(Sort.Direction.valueOf(filters[0]), filters[1])));
+                    break;
+                }
+
+                default: {
+                    page = eventPlaceRepository.findAll(
+                            PageRequest.of(activePage-1, size, Sort.by(Sort.Direction.ASC, "eventPlaceId")));
+                    break;
+                }
             }
         }
+
 
         Page<EventPlaceResponse> eventPlaceResponse = page.map(new Function<EventPlace, EventPlaceResponse>() {
             @Override
@@ -120,6 +173,24 @@ public class EventPlaceController {
         });
 
         return eventPlaceResponse;
+    }
+
+    public static byte[] compressBytes(byte[] data) {
+        Deflater deflater = new Deflater();
+        deflater.setInput(data);
+        deflater.finish();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+        byte[] buffer = new byte[1024];
+        while (!deflater.finished()) {
+            int count = deflater.deflate(buffer);
+            outputStream.write(buffer, 0, count);
+        }
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+        }
+        System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
+        return outputStream.toByteArray();
     }
 
     @GetMapping("/acceptEventPlace")

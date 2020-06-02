@@ -15,14 +15,10 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class EventPlaceOpinionRequest {
 
-
-    private int eventID;
-
+    private int eventPlaceAbout;
     @NotBlank
     private String title;
-
     @NotBlank
     private String message;
-
     private int grade;
 }

@@ -135,6 +135,10 @@ public class EventController {
         CyclePeriod cyclePeriod = cyclePeriodRepository.findByCyclePeriodId(cycleId);
         event.setCyclePeriod(cyclePeriod);
 
+        boolean isCyclic = false;
+        if(cyclePeriod != null)
+            isCyclic = true;
+
         int eventPlaceId = eventUpdate.getEventPlaceId();
         EventPlace eventPlace = eventPlaceRepository.findByEventPlaceId(eventPlaceId);
         event.setEventPlace(eventPlace);
@@ -146,7 +150,7 @@ public class EventController {
         event.setDate(eventUpdate.getEventDate());
         event.setEventTime(eventUpdate.getEventTime());
         event.setMaxPlayers(eventUpdate.getMaxPlayers());
-        event.setCyclic(eventUpdate.isCyclic());
+        event.setCyclic(isCyclic);
         event.setEventDuration(eventUpdate.getEventDuration());
 
         Event result = eventRepository.save(event);

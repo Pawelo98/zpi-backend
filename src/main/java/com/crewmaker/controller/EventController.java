@@ -5,6 +5,7 @@ import com.crewmaker.entity.*;
 import com.crewmaker.exception.ResourceNotFoundException;
 import com.crewmaker.repository.*;
 import com.crewmaker.reqbody.ApiResponse;
+import com.crewmaker.reqbody.EventUpdateRequest;
 import com.crewmaker.reqbody.NewEventPlaceRequest;
 import com.crewmaker.reqbody.NewEventRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,8 @@ public class EventController {
     private EventPlaceRepository eventPlaceRepository;
     @Autowired
     private SportsCategoryRepository sportsCategoryRepository;
+    @Autowired
+    private ParticipationRepository participationRepository;
 
     //baeldung requestparams zeby parametryzowac tutaj jaki event i przeslac sobie id sportscategory a nie string.
    /* @GetMapping("/api/searchevents")
@@ -103,9 +106,48 @@ public class EventController {
         EventPlace eventPlace = eventPlaceRepository.findByEventPlaceId(newEvent.getEventPlaceId());
         SportsCategory sportsCategory = sportsCategoryRepository.findBySportsCategoryId(newEvent.getSportCategoryId());
 
+        boolean isCyclic = false;
+        if(cyclePeriod != null)
+            isCyclic = true;
+
         Event event = new Event(cyclePeriod, eventStatus, eventPlace, sportsCategory, newEvent.getEventName(),
-                newEvent.getEventDescription(), newEvent.getEventDate(), newEvent.getMaxPlayers(), newEvent.isCyclic(),
+                newEvent.getEventDescription(), newEvent.getEventDate(), newEvent.getMaxPlayers(), isCyclic,
                 newEvent.getEventTime(), newEvent.getEventDuration(), user);
+
+        Event result = eventRepository.save(event);
+
+        event.addParticipator(user, event, 0);
+        eventRepository.save(event);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/users/{username}")
+                .buildAndExpand(result.getEventId()).toUri();
+
+        return ResponseEntity.created(location).body(new ApiResponse(true, "New event added successfully"));
+    }
+
+    @PostMapping("api/updateEvent")
+    public ResponseEntity<?> updateEvent(@RequestBody EventUpdateRequest eventUpdate) {
+        int eventId = eventUpdate.getEventId();
+        Event event = eventRepository.findByEventId(eventId);
+
+        int cycleId = eventUpdate.getCycleId();
+        CyclePeriod cyclePeriod = cyclePeriodRepository.findByCyclePeriodId(cycleId);
+        event.setCyclePeriod(cyclePeriod);
+
+        int eventPlaceId = eventUpdate.getEventPlaceId();
+        EventPlace eventPlace = eventPlaceRepository.findByEventPlaceId(eventPlaceId);
+        event.setEventPlace(eventPlace);
+
+        event.setSportsCategory(sportsCategoryRepository.findBySportsCategoryId(eventUpdate.getSportCategoryId()));
+
+        event.setName(eventUpdate.getEventName());
+        event.setDescription(eventUpdate.getEventDescription());
+        event.setDate(eventUpdate.getEventDate());
+        event.setEventTime(eventUpdate.getEventTime());
+        event.setMaxPlayers(eventUpdate.getMaxPlayers());
+        event.setCyclic(eventUpdate.isCyclic());
+        event.setEventDuration(eventUpdate.getEventDuration());
 
         Event result = eventRepository.save(event);
 
@@ -114,5 +156,19 @@ public class EventController {
                 .buildAndExpand(result.getEventId()).toUri();
 
         return ResponseEntity.created(location).body(new ApiResponse(true, "New event added successfully"));
+    }
+
+    @PostMapping("api/cancelEvent/{eventID}")
+    public ResponseEntity<?> cancelEvent(@PathVariable(value = "eventID") int eventID) {
+        Event event = eventRepository.findByEventId(eventID);
+        event.setEventStatus(eventStatusRepository.findByEventStatusId(2));
+
+        Event result = eventRepository.save(event);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/users/{username}")
+                .buildAndExpand(result.getEventId()).toUri();
+
+        return ResponseEntity.created(location).body(new ApiResponse(true, "Event canceled successfully"));
     }
 }

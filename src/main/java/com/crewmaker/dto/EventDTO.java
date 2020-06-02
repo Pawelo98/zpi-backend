@@ -23,8 +23,12 @@ public class EventDTO {
     private String eventPlacePostCode;
     private String eventPlaceCity;
     private String eventSportName;
+    private int eventSportID;
     private Time eventDuration;
     private int eventPlaceID;
+    private String userInitiator;
+    private String eventStatus;
+    private int cycleId;
 
     public EventDTO(Event event){
         eventID = event.getEventId();
@@ -36,6 +40,7 @@ public class EventDTO {
         if(isCyclic) {
             cycleType = event.getCyclePeriod().getCycleType();
             cycleLength = event.getCyclePeriod().getCycleLength();
+            cycleId = event.getCyclePeriod().getCyclePeriodId();
         }
         eventPlaceDescription = event.getEventPlace().getDescription();
         eventPlacePostCode = event.getEventPlace().getPostCode();
@@ -46,8 +51,11 @@ public class EventDTO {
         eventPlaceCity = event.getEventPlace().getCity();
         maxPlayers = event.getMaxPlayers();
         eventSportName = event.getSportsCategory().getSportCategoryName();
+        eventSportID = event.getSportsCategory().getSportsCategoryId();
         eventPlaceStreetNumber = event.getEventPlace().getStreetNumber();
         eventDuration = event.getEventDuration();
+        userInitiator = event.getUserInitiator().getUsername();
+        eventStatus = event.getEventStatus().getStatusName();
     }
 
     public String getEventDescription() {
@@ -162,6 +170,14 @@ public class EventDTO {
         this.eventSportName = eventSportName;
     }
 
+    public int getEventSportID() {
+        return eventSportID;
+    }
+
+    public void setEventSportID(int eventSportID) {
+        this.eventSportID = eventSportID;
+    }
+
     public Time getEventTime() {
         return eventTime;
     }
@@ -192,5 +208,29 @@ public class EventDTO {
 
     public void setEventPlaceID(int eventPlaceID) {
         this.eventPlaceID = eventPlaceID;
+    }
+
+    public String getUserInitiator() {
+        return userInitiator;
+    }
+
+    public void setUserInitiator(String userInitiator) {
+        this.userInitiator = userInitiator;
+    }
+
+    public String getEventStatus() {
+        return eventStatus;
+    }
+
+    public void setEventStatus(String eventStatus) {
+        this.eventStatus = eventStatus;
+    }
+
+    public int getCycleId() {
+        return cycleId;
+    }
+
+    public void setCycleId(int cycleId) {
+        this.cycleId = cycleId;
     }
 }

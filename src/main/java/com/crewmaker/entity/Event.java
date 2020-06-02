@@ -5,7 +5,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -190,6 +192,22 @@ public class Event {
 
     public void setEventParticipations(Set<Participation> eventParticipations) {
         this.eventParticipations = eventParticipations;
+    }
+
+    public User getUserInitiator() {
+        return userInitiator;
+    }
+
+    public void setUserInitiator(User userInitiator) {
+        this.userInitiator = userInitiator;
+    }
+
+    public void addParticipator(User user, Event event, Integer queuePosition) {
+        if (eventParticipations == null) {
+            eventParticipations = new HashSet<>();
+        }
+        Participation participation = new Participation(user, event, queuePosition);
+        eventParticipations.add(participation);
     }
 
     @Override

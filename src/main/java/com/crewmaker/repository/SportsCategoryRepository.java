@@ -23,5 +23,6 @@ public interface SportsCategoryRepository extends JpaRepository<SportsCategory,I
             "WHERE sc.sportsCategoryEventPlaces.id.eventPlace.eventPlaceId = :eventPlaceID")*/
     List<SportsCategoryDTO> findByEventPlaceId(@Param("eventPlaceID") int eventPlaceID);
 
+    List<SportsCategory> findAll();
     SportsCategory findBySportsCategoryId(int id);
 }

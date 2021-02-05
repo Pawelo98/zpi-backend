@@ -1,11 +1,13 @@
 package com.crewmaker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="eventplace")
+@Table(name="EventPlace")
 public class EventPlace {
 
     @Id
@@ -41,23 +43,57 @@ public class EventPlace {
     @Column(name="eventPlaceStreetNumber")
     private String streetNumber;
 
+    @Column(name="photoLink")
+    private String photoLink;
+
+    @Column(name="isAccepted")
+    private Boolean isAccepted;
+
+    @Column(name="isArchived")
+    private Boolean isArchived;
+
+    public Boolean getArchived() {
+        return isArchived;
+    }
+
+    public void setArchived(Boolean archived) {
+        isArchived = archived;
+    }
+
     @OneToMany(mappedBy="eventPlace", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<EventPlaceOpinion> eventPlaceEventPlaceOpinions;
 
-    @ManyToMany(cascade= {CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinTable(name="eventplacesportscategory",
-            joinColumns=@JoinColumn(name="eventPlaceID"),
-            inverseJoinColumns=@JoinColumn(name="sportsCategoryID"))
-    private List<SportsCategory> sportsCategories;
+    @OneToMany(mappedBy="id.eventPlace", cascade= {CascadeType.PERSIST,
+            CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    private Set<EventPlaceSportsCategory> eventPlaceSportsCategories;
 
+
+    @ManyToMany(cascade = {CascadeType.PERSIST,
+            CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinTable(
+            name = "EventPlaceSportsCategory",
+            joinColumns = { @JoinColumn(name = "eventPlaceID") },
+            inverseJoinColumns = { @JoinColumn(name = "sportsCategoryID") }
+    )
+    Set<SportsCategory> sportsCategory = new HashSet<>();
+
+
+    public Set<SportsCategory> getSportsCategory() {
+        return sportsCategory;
+    }
+
+    public void setSportsCategory(Set<SportsCategory> sportsCategory) {
+        this.sportsCategory = sportsCategory;
+    }
+
+    @JsonIgnore
     @OneToMany(mappedBy="eventPlace", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<Event> eventPlaceEvents;
 
-    public EventPlace(User userAccepting, User userRequesting, String name, String description, String city, String postCode, String street, String streetNumber) {
-        this.userAccepting = userAccepting;
+    public EventPlace(User userRequesting, String name, String description, String city,
+                      String postCode, String street, String streetNumber, String photoLink) {
         this.userRequesting = userRequesting;
         this.name = name;
         this.description = description;
@@ -65,6 +101,16 @@ public class EventPlace {
         this.postCode = postCode;
         this.street = street;
         this.streetNumber = streetNumber;
+        this.photoLink = photoLink;
+        this.isAccepted = false;
+        this.isArchived = false;
+    }
+    public String getUserAcceptingUsername() {
+        return userAccepting.getUsername();
+    }
+
+    public String getUserRequestingUsername() {
+        return userRequesting.getUsername();
     }
 
     public EventPlace() {}
@@ -141,6 +187,22 @@ public class EventPlace {
         this.streetNumber = streetNumber;
     }
 
+    public String getPhotoLink() {
+        return photoLink;
+    }
+
+    public void setPhotoLink(String photoLink) {
+        this.photoLink = photoLink;
+    }
+
+    public Boolean getAccepted() {
+        return isAccepted;
+    }
+
+    public void setAccepted(Boolean accepted) {
+        isAccepted = accepted;
+    }
+
     public Set<EventPlaceOpinion> getEventPlaceEventPlaceOpinions() {
         return eventPlaceEventPlaceOpinions;
     }
@@ -149,12 +211,12 @@ public class EventPlace {
         this.eventPlaceEventPlaceOpinions = eventPlaceEventPlaceOpinions;
     }
 
-    public List<SportsCategory> getSportsCategories() {
-        return sportsCategories;
+    public Set<EventPlaceSportsCategory> getEventPlaceSportsCategories() {
+        return eventPlaceSportsCategories;
     }
 
-    public void setSportsCategories(List<SportsCategory> sportsCategories) {
-        this.sportsCategories = sportsCategories;
+    public void setEventPlaceSportsCategories(Set<EventPlaceSportsCategory> eventPlaceSportsCategories) {
+        this.eventPlaceSportsCategories = eventPlaceSportsCategories;
     }
 
     public Set<Event> getEventPlaceEvents() {

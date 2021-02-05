@@ -1,10 +1,11 @@
 package com.crewmaker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name="cycleperiod")
+@Table(name="CyclePeriod")
 public class CyclePeriod {
 
     @Id
@@ -18,6 +19,7 @@ public class CyclePeriod {
     @Column(name="cycleLength")
     private int cycleLength;
 
+    @JsonIgnore
     @OneToMany(mappedBy="cyclePeriod", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<Event> cyclePeriodEvents;

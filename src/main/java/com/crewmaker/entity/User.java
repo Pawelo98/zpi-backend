@@ -1,226 +1,127 @@
 package com.crewmaker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
+@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
-@Table(name="user")
+@Table(name="User")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="userID")
-    private int userId;
+    @Column(name="UserID")
+    private Long userId;
 
-    @Column(name="login")
-    private String login;
+    @Column(name="Username")
+    private String username;
 
-    @Column(name="email")
+    @Column(name="Email")
     private String email;
 
-    @Column(name="password")
+    @Column(name="Password")
     private String password;
-
-    @Column(name="name")
+    
+    @Column(name="Name")
     private String name;
 
-    @Column(name="surname")
+    @Column(name="Surname")
     private String surname;
 
-    @Column(name="archived")
+    @Column(name="Archived")
     private boolean archived;
 
-    @Column(name="phoneNumber")
+    @Column(name="Enabled")
+    private boolean enabled;
+
+    @Column(name="PhoneNumber")
     private String phoneNumber;
 
-    @Column(name="isAdmin")
-    private boolean isAdmin;
+    @OneToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name="ImageID")
+    @JsonIgnore
+    private UserProfileImage userProfileImage;
+
+    @Column(name="Description")
+    private String description;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "UserRoles",
+            joinColumns = @JoinColumn(name = "UserPermittedID"),
+            inverseJoinColumns = @JoinColumn(name = "RoleAssignedID"))
+    @JsonIgnore
+    private Set<Role> roles = new HashSet<>();
+
 
     @OneToMany(mappedBy="userAccepting", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonIgnore
     private Set<EventPlace> userAcceptingEventPlaces;
 
     @OneToMany(mappedBy="userRequesting", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonIgnore
     private Set<EventPlace> userRequestingEventPlaces;
 
     @OneToMany(mappedBy="userAuthor", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonIgnore
     private Set<UserOpinion> userAuthorUserOpinions;
 
     @OneToMany(mappedBy="userAbout", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonIgnore
     private Set<UserOpinion> userAboutUserOpinions;
 
     @OneToMany(mappedBy="userAuthor", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+
+    @JsonIgnore
     private Set<EventPlaceOpinion> userAuthorEventPlaceOpinions;
 
-    @OneToMany(mappedBy="userManaging", cascade= {CascadeType.PERSIST,
+    @OneToMany(mappedBy="id.user", cascade= {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    private Set<Event> userManagingEvents;
+    @JsonIgnore
+    private Set<Participation> userParticipations;
 
-    public User(String login, String email, String password, String name, String surname, boolean archived, String phoneNumber, boolean isAdmin) {
-        this.login = login;
+    @OneToMany(mappedBy="userInitiator", cascade= {CascadeType.PERSIST,
+            CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonIgnore
+    private Set<Event> userEvents;
+
+    public User(String username, String email, String password, String name, String surname, boolean archived, String phoneNumber,
+                boolean enabled, String photoLink, String description) {
+        this.username = username;
         this.email = email;
         this.password = password;
         this.name = name;
         this.surname = surname;
         this.archived = archived;
         this.phoneNumber = phoneNumber;
-        this.isAdmin = isAdmin;
-    }
-
-    public User() {}
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public boolean isArchived() {
-        return archived;
-    }
-
-    public void setArchived(boolean archived) {
-        this.archived = archived;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public boolean isAdmin() {
-        return isAdmin;
-    }
-
-    public void setAdmin(boolean admin) {
-        isAdmin = admin;
-    }
-
-    public Set<EventPlace> getUserAcceptingEventPlaces() {
-        return userAcceptingEventPlaces;
-    }
-
-    public void setUserAcceptingEventPlaces(Set<EventPlace> userAcceptingEventPlaces) {
-        this.userAcceptingEventPlaces = userAcceptingEventPlaces;
-    }
-
-    public Set<EventPlace> getUserRequestingEventPlaces() {
-        return userRequestingEventPlaces;
-    }
-
-    public void setUserRequestingEventPlaces(Set<EventPlace> userRequestingEventPlaces) {
-        this.userRequestingEventPlaces = userRequestingEventPlaces;
-    }
-
-    public Set<UserOpinion> getUserAuthorUserOpinion() {
-        return userAuthorUserOpinions;
-    }
-
-    public void setUserAuthorUserOpinion(Set<UserOpinion> userAuthorUserOpinions) {
-        this.userAuthorUserOpinions = userAuthorUserOpinions;
-    }
-
-    public Set<UserOpinion> getUserAboutUserOpinion() {
-        return userAboutUserOpinions;
-    }
-
-    public void setUserAboutUserOpinion(Set<UserOpinion> userAboutUserOpinions) {
-        this.userAboutUserOpinions = userAboutUserOpinions;
-    }
-
-    public Set<UserOpinion> getUserAuthorUserOpinions() {
-        return userAuthorUserOpinions;
-    }
-
-    public void setUserAuthorUserOpinions(Set<UserOpinion> userAuthorUserOpinions) {
-        this.userAuthorUserOpinions = userAuthorUserOpinions;
-    }
-
-    public Set<UserOpinion> getUserAboutUserOpinions() {
-        return userAboutUserOpinions;
-    }
-
-    public void setUserAboutUserOpinions(Set<UserOpinion> userAboutUserOpinions) {
-        this.userAboutUserOpinions = userAboutUserOpinions;
-    }
-
-    public Set<EventPlaceOpinion> getUserAuthorEventPlaceOpinions() {
-        return userAuthorEventPlaceOpinions;
-    }
-
-    public void setUserAuthorEventPlaceOpinions(Set<EventPlaceOpinion> userAuthorEventPlaceOpinions) {
-        this.userAuthorEventPlaceOpinions = userAuthorEventPlaceOpinions;
-    }
-
-    public Set<Event> getUserManagingEvents() {
-        return userManagingEvents;
-    }
-
-    public void setUserManagingEvents(Set<Event> userManagingEvents) {
-        this.userManagingEvents = userManagingEvents;
+        this.enabled = enabled;
+        this.description = description;
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "userId=" + userId +
-                ", login='" + login + '\'' +
+                ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", archived=" + archived +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", isAdmin=" + isAdmin +
+                ", isEnabled=" + enabled +
                 '}';
     }
 }
